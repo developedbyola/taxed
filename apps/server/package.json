@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun run dist/index.js",
+    "watch": "bun --watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ./src --ext .ts",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "types": "tsc -p tsconfig.build.json",
+    "build:all": "bun run build && bun run types",
+    "clean": "rm -rf dist",
+    "deploy": "npx wrangler deploy"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@hono/trpc-server": "^0.3.4",
+    "@supabase/supabase-js": "^2.50.0",
+    "@trpc/server": "^11.4.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "argon2": "^0.43.0",
+    "cookie": "^1.0.2",
+    "dotenv": "^16.5.0",
+    "hono": "^4.8.1",
+    "supabase": "^2.26.9",
+    "typescript": "^5.8.3",
+    "ua-parser-js": "^2.0.3",
+    "zod": "^3.25.67"
+  }
+}

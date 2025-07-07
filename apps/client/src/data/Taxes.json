@@ -1,0 +1,171 @@
+{
+  "federal": [
+    {
+      "id": "tax_1",
+      "name": "Companies Income Tax (CIT)",
+      "description": "Tax on profits of registered companies in Nigeria.",
+      "payment_info": "Paid by companies annually via FIRS e-payment after audited accounts are prepared.",
+      "rate": "30% (20% for small companies below ₦25 million turnover)"
+    },
+    {
+      "id": "tax_2",
+      "name": "Petroleum Profits Tax (PPT)",
+      "description": "Tax on profits from petroleum operations.",
+      "payment_info": "Paid by upstream oil and gas companies to FIRS monthly and annually.",
+      "rate": "50% to 85%"
+    },
+    {
+      "id": "tax_3",
+      "name": "Value Added Tax (VAT)",
+      "description": "Consumption tax on goods and services.",
+      "payment_info": "Collected by businesses from customers and remitted monthly to FIRS.",
+      "rate": "7.5%"
+    },
+    {
+      "id": "tax_4",
+      "name": "Capital Gains Tax (CGT)",
+      "description": "Tax on gains from disposal of chargeable assets.",
+      "payment_info": "Individuals and companies pay on disposals; filed with FIRS.",
+      "rate": "10%"
+    },
+    {
+      "id": "tax_5",
+      "name": "Stamp Duties",
+      "description": "Tax on written and electronic documents.",
+      "payment_info": "Paid on agreements, contracts, and receipts to FIRS or state IRS.",
+      "rate": "Varies (flat or ad valorem, e.g., 1.5% on certain transactions)"
+    },
+    {
+      "id": "tax_6",
+      "name": "Tertiary Education Tax (TET)",
+      "description": "Tax to fund tertiary education.",
+      "payment_info": "Paid annually by companies to FIRS along with CIT.",
+      "rate": "2.5% of assessable profit"
+    },
+    {
+      "id": "tax_7",
+      "name": "National Information Technology Development Levy (NITDL)",
+      "description": "Levy for IT development in Nigeria.",
+      "payment_info": "Paid by companies with ₦100 million+ turnover to FIRS annually.",
+      "rate": "1% of profit before tax"
+    },
+    {
+      "id": "tax_8",
+      "name": "Customs and Excise Duties",
+      "description": "Tax on imported and certain locally manufactured goods.",
+      "payment_info": "Paid by importers at ports or manufacturers to Nigeria Customs Service.",
+      "rate": "Varies (5% to 35% depending on goods)"
+    },
+    {
+      "id": "tax_9",
+      "name": "Withholding Tax (WHT)",
+      "description": "Advance payment of income tax on specified transactions.",
+      "payment_info": "Deducted at source by the payer and remitted to FIRS monthly.",
+      "rate": "5% to 10% depending on transaction type"
+    }
+  ],
+  "state": [
+    {
+      "id": "tax_10",
+      "name": "Personal Income Tax (PAYE and Direct Assessment)",
+      "description": "Tax on personal income of residents.",
+      "payment_info": "Paid monthly via PAYE by employers or directly by self-employed to state IRS.",
+      "rate": "7% to 24% (graduated rates)"
+    },
+    {
+      "id": "tax_11",
+      "name": "Road Taxes",
+      "description": "Tax for vehicle registration and renewal.",
+      "payment_info": "Paid by vehicle owners at state revenue offices or VIO.",
+      "rate": "Varies by vehicle type"
+    },
+    {
+      "id": "tax_12",
+      "name": "Business Premises Levy",
+      "description": "Tax for operating business premises in a state.",
+      "payment_info": "Paid annually to state IRS or Ministry of Commerce.",
+      "rate": "₦10,000 for urban, ₦5,000 for rural (varies by state)"
+    },
+    {
+      "id": "tax_13",
+      "name": "Hotel, Restaurant, and Event Centre Consumption Tax",
+      "description": "Tax on goods and services consumed in hotels, restaurants, and event centers.",
+      "payment_info": "Collected by the businesses and remitted to state IRS monthly.",
+      "rate": "5% to 10% depending on state"
+    },
+    {
+      "id": "tax_14",
+      "name": "Land Use Charge / Property Tax",
+      "description": "Tax on property ownership and occupancy.",
+      "payment_info": "Paid annually by property owners to the state government.",
+      "rate": "Varies (e.g., 0.375% of property value in Lagos)"
+    }
+  ],
+  "local": [
+    {
+      "id": "tax_15",
+      "name": "Tenement Rates",
+      "description": "Rates on occupancy of buildings within LGA jurisdiction.",
+      "payment_info": "Paid annually to the local government.",
+      "rate": "Varies by location and property value"
+    },
+    {
+      "id": "tax_16",
+      "name": "Market Taxes and Levies",
+      "description": "Daily or weekly levies on traders in markets.",
+      "payment_info": "Paid by market traders to LGA revenue collectors.",
+      "rate": "Flat rates, varies by market"
+    },
+    {
+      "id": "tax_17",
+      "name": "Shops and Kiosks Rates",
+      "description": "Rates for owning or renting kiosks and shops.",
+      "payment_info": "Paid annually to LGA.",
+      "rate": "Varies"
+    },
+    {
+      "id": "tax_18",
+      "name": "Motor Park Levies",
+      "description": "Levies for using motor parks under LGA control.",
+      "payment_info": "Paid by commercial drivers daily or weekly.",
+      "rate": "Flat rates"
+    },
+    {
+      "id": "tax_19",
+      "name": "Slaughter Slab Fees",
+      "description": "Fees for using public abattoirs.",
+      "payment_info": "Paid by butchers at point of slaughter.",
+      "rate": "Flat rates"
+    }
+  ],
+  "others": [
+    {
+      "id": "tax_20",
+      "name": "Nigerian Social Insurance Trust Fund (NSITF)",
+      "description": "Contribution for employee social insurance.",
+      "payment_info": "Paid by employers monthly.",
+      "rate": "1% of payroll"
+    },
+    {
+      "id": "tax_21",
+      "name": "Industrial Training Fund (ITF)",
+      "description": "Contribution for manpower training.",
+      "payment_info": "Paid by employers with 5+ employees annually.",
+      "rate": "1% of annual payroll"
+    },
+    {
+      "id": "tax_22",
+      "name": "Pension Contributions",
+      "description": "Mandatory retirement savings contributions.",
+      "payment_info": "Paid monthly by employers and employees to PFAs.",
+      "rate": "Employer 10%, Employee 8%"
+    },
+    {
+      "id": "tax_23",
+      "name": "Employee Compensation Scheme (ECS)",
+      "description": "Contribution for employee workplace injury insurance.",
+      "payment_info": "Paid by employers annually.",
+      "rate": "1% of payroll"
+    }
+  ]
+}
