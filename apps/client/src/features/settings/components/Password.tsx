@@ -2,10 +2,10 @@ import React from 'react';
 import { trpc } from '@/libs/trpc';
 import { Auth } from '@/features/auth';
 import { User } from '@/features/users';
+import { LucideKey } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { passwordSchema } from '../schemas';
 import { Field, useDialog } from '@/components';
-import { LucideKey, LucideMail } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Heading, Icon, Spinner, Text } from '@chakra-ui/react';
 
@@ -150,7 +150,7 @@ const PasswordForm = () => {
             ml={3}
             color='gray.500'
           >
-            <LucideMail size={20} />
+            <LucideKey size={20} />
           </Icon>
           <Field.TextField
             fontSize={14}
