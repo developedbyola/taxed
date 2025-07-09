@@ -25,8 +25,9 @@ export const Login = () => {
         type: 'LOGIN',
         payload: {
           auth: {
-            accessToken: data?.accessToken,
+            isPending: false,
             isAuthenticated: true,
+            accessToken: data?.accessToken,
           },
         },
       });

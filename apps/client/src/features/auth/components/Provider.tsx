@@ -1,6 +1,7 @@
 import React from 'react';
 
 type Auth = {
+  isPending: boolean;
   isAuthenticated: boolean;
   accessToken: string | undefined;
 };
@@ -31,7 +32,11 @@ const reducer = (state: State, action: Action): State => {
     case 'LOGOUT':
       return {
         ...state,
-        auth: { accessToken: undefined, isAuthenticated: false },
+        auth: {
+          isPending: false,
+          accessToken: undefined,
+          isAuthenticated: false,
+        },
       };
     default:
       return state;
@@ -42,6 +47,7 @@ export const Provider = ({
   children,
   initialState = {
     auth: {
+      isPending: true,
       accessToken: undefined,
       isAuthenticated: false,
     },

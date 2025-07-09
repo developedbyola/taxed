@@ -59,7 +59,7 @@ export const usersRouter = router({
           .eq('id', input.userId)
           .single();
 
-        if (!user.data) {
+        if (user.error) {
           return ctx.fail({
             message:
               'The requested user account could not be found. The ID provided may be incorrect or the account may have been deleted.',
@@ -68,7 +68,13 @@ export const usersRouter = router({
         }
 
         return ctx.ok({
-          user: user.data,
+          user: {
+            id: user.data.id,
+            firstName: user.data.first_name,
+            lastName: user.data.last_name,
+            email: user.data.email,
+            createdAt: user.data.created_at,
+          },
         });
       } catch (err) {}
     }),
@@ -76,13 +82,22 @@ export const usersRouter = router({
   update: protectedProcedure
     .input(
       z.object({
-        name: z
+        firstName: z
           .string()
-          .min(2, 'Name must be at least 2 characters long')
-          .max(100, 'Name cannot exceed 100 characters')
+          .min(2, 'First name must be at least 2 characters long')
+          .max(100, 'First name cannot exceed 100 characters')
           .regex(
             /^[\p{L}\s'-]+$/u,
-            'Name can only contain letters, spaces, hyphens, and apostrophes'
+            'First name can only contain letters, spaces, hyphens, and apostrophes'
+          )
+          .optional(),
+        lastName: z
+          .string()
+          .min(2, 'Last name must be at least 2 characters long')
+          .max(100, 'Last name cannot exceed 100 characters')
+          .regex(
+            /^[\p{L}\s'-]+$/u,
+            'Last name can only contain letters, spaces, hyphens, and apostrophes'
           )
           .optional(),
       })
@@ -91,12 +106,12 @@ export const usersRouter = router({
       try {
         const user = await ctx.supabase
           .from('users')
-          .update({ first_name: input.name })
+          .update({ first_name: input.firstName, last_name: input.lastName })
           .eq('id', ctx.actor.userId)
           .select('id, first_name, last_name, email, created_at')
           .single();
 
-        if (!user.data) {
+        if (user.error) {
           return ctx.fail({
             message:
               'We encountered an issue while updating your profile. Please try again in a few moments.',
@@ -105,7 +120,13 @@ export const usersRouter = router({
         }
 
         return ctx.ok({
-          user: user.data,
+          user: {
+            id: user.data.id,
+            firstName: user.data.first_name,
+            lastName: user.data.last_name,
+            email: user.data.email,
+            createdAt: user.data.created_at,
+          },
         });
       } catch (err) {
         return ctx.fail(err);
@@ -237,14 +258,13 @@ export const usersRouter = router({
             email: input.email,
           })
           .eq('id', ctx.actor.userId)
-          .select('id, name, created_at')
+          .select('id')
           .single();
 
         if (updateError) {
           console.error('Email update error:', updateError);
           return ctx.fail({
-            message:
-              'We encountered an issue while updating your email address. Please try again later.',
+            message: `We encountered an issue while updating your email address. ${updateError.message}`,
             code: 'INTERNAL_SERVER_ERROR',
           });
         }

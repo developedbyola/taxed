@@ -96,6 +96,7 @@ const Label = React.forwardRef<LabelRef, LabelProps>((props, ref) => {
   const {
     fontSize = '0.875rem',
     color = 'gray.500',
+    letterSpacing = '-1%',
     fontWeight = 'normal',
     ...restProps
   } = props;
@@ -108,6 +109,7 @@ const Label = React.forwardRef<LabelRef, LabelProps>((props, ref) => {
       color={color}
       fontSize={fontSize}
       fontWeight={fontWeight}
+      letterSpacing={letterSpacing}
       {...restProps}
     />
   );
@@ -117,7 +119,7 @@ type ContentRef = React.ComponentRef<typeof HStack>;
 type ContentProps = React.ComponentProps<typeof HStack>;
 const Content = React.forwardRef<ContentRef, ContentProps>((props, ref) => {
   const {
-    gap = 2,
+    gap = 1,
     rounded = 12,
     height = '44px',
     overflow = 'hidden',
@@ -193,6 +195,7 @@ const Feedback = React.forwardRef<FeedbackRef, FeedbackProps>((props, ref) => {
     fontSize = '0.875rem',
     lineHeight = '1.25rem',
     color = 'red.500',
+    letterSpacing = '-1%',
     ...restProps
   } = props;
   const { fieldState } = useFieldContext();
@@ -208,6 +211,7 @@ const Feedback = React.forwardRef<FeedbackRef, FeedbackProps>((props, ref) => {
       ref={ref}
       fontSize={fontSize}
       lineHeight={lineHeight}
+      letterSpacing={letterSpacing}
       {...restProps}
       color={color}
     >
@@ -223,6 +227,7 @@ const Hint = React.forwardRef<HintRef, HintProps>((props, ref) => {
     fontSize = '0.875rem',
     lineHeight = '1.25rem',
     color = 'gray.500',
+    letterSpacing = '-1%',
     ...restProps
   } = props;
   useFieldContext();
@@ -233,6 +238,7 @@ const Hint = React.forwardRef<HintRef, HintProps>((props, ref) => {
       color={color}
       fontSize={fontSize}
       lineHeight={lineHeight}
+      letterSpacing={letterSpacing}
       {...restProps}
     />
   );

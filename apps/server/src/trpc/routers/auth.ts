@@ -34,9 +34,9 @@ export const authRouter = router({
 
         if (user.error) {
           return ctx.fail({
-            code: 'BAD_REQUEST',
+            code: 'UNAUTHORIZED',
             message:
-              'Unable to fetch data. Check your network connection and try again later.',
+              'The email you entered is incorrect. Please check your credentials and try again.',
           });
         }
 

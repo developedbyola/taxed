@@ -15,8 +15,8 @@ export default defineConfig({
         fontBaseUrl: 'https://fonts.googleapis.com/css2',
         families: [
           {
-            name: 'Inter',
-            styles: 'wght@400;500;600;700',
+            name: 'Geist Mono',
+            styles: 'wght@400;500;600;700;800',
             defer: true,
           },
         ],

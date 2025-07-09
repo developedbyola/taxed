@@ -1,10 +1,10 @@
 import React from 'react';
 import { trpc } from '@/libs/trpc';
 import { useDialog } from '@/components';
-import { useTransactions } from './Provider';
-import { Box, Flex, Image, Skeleton, Text } from '@chakra-ui/react';
 import { excerpt } from '@/utils/excerpt';
 import { useNavigate } from 'react-router';
+import { useTransactions } from './Provider';
+import { Box, Flex, Image, Spinner, Text } from '@chakra-ui/react';
 
 const useGetTransactions = () => {
   const dialog = useDialog();
@@ -56,33 +56,12 @@ const useGetTransactions = () => {
 
 const Loader = () => {
   return (
-    <Box spaceY={2}>
-      {Array.from({ length: 8 }).map((_, index) => (
-        <Flex
-          gap={4}
-          key={index}
-          alignItems={'center'}
-        >
-          <Skeleton
-            width={'56px'}
-            aspectRatio={1}
-            borderRadius={16}
-            variant={'shine'}
-          />
-          <Box spaceY={1.5}>
-            <Skeleton
-              width={32}
-              height={4}
-              rounded={12}
-            />
-            <Skeleton
-              width={64}
-              height={3}
-              rounded={12}
-            />
-          </Box>
-        </Flex>
-      ))}
+    <Box
+      spaceY={2}
+      maxW='3rem'
+      mx={'auto'}
+    >
+      <Spinner size={'sm'} />
     </Box>
   );
 };
@@ -96,14 +75,16 @@ const Map = () => {
   const { transactions } = useTransactions();
 
   return (
-    <Box spaceY={2}>
+    <Box
+      spaceY={2}
+      divideY={'1px'}
+      divideColor={'gray.200'}
+    >
       {transactions.map((transaction) => (
         <Flex
-          px={2}
-          py={2}
-          gap={4}
+          p={1}
+          gap={3.5}
           rounded={16}
-          bg={'gray.50'}
           cursor={'pointer'}
           key={transaction.id}
           alignItems={'center'}
@@ -115,7 +96,7 @@ const Map = () => {
             p={2}
             shadow='xs'
             rounded={12}
-            width={'52px'}
+            width={'44px'}
             aspectRatio={1}
             backgroundColor={'white'}
             src={transaction.meta.logo}
@@ -125,16 +106,18 @@ const Map = () => {
             <Text
               fontSize={14}
               lineHeight={1}
-              fontWeight={'semibold'}
+              fontWeight={'medium'}
+              letterSpacing={'-0.01em'}
             >
-              {transaction.amount} {transaction.currency}
+              {transaction.meta.title} - {transaction.amount}{' '}
+              {transaction.currency}
             </Text>
             <Text
-              fontSize={14}
+              fontSize={13}
               lineHeight={1}
               color={'gray.600'}
             >
-              {excerpt(transaction.meta.description, 32)}
+              {excerpt(transaction.meta.description, 36)}
             </Text>
           </Box>
         </Flex>

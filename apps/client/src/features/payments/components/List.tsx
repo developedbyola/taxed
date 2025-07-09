@@ -11,8 +11,8 @@ import {
   Tabs,
 } from '@chakra-ui/react';
 import Taxes from '@/data/Taxes.json';
-import { LucideMessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { LucideBadgeInfo } from 'lucide-react';
 
 export const List = () => {
   const navigate = useNavigate();
@@ -21,42 +21,44 @@ export const List = () => {
   return (
     <React.Fragment>
       <Box
-        my={4}
+        py={4}
         px={5}
       >
         <Flex
           alignItems={'center'}
           justifyContent={'space-between'}
         >
-          <Heading>Pay</Heading>
+          <Heading letterSpacing={'-3%'}>Pay</Heading>
           <Tooltip.Root>
             <Tooltip.Trigger>
               <IconButton
+                unstyled
                 size={'xs'}
                 rounded={'full'}
-                variant={'ghost'}
-                color={'gray.600'}
+                color={'gray.500'}
+                cursor={'pointer'}
+                _hover={{ color: 'gray.900' }}
               >
-                <Icon size={'md'}>
-                  <LucideMessageSquare />
+                <Icon>
+                  <LucideBadgeInfo size={20} />
                 </Icon>
               </IconButton>
             </Tooltip.Trigger>
             <Tooltip.Positioner>
               <Tooltip.Content
-                px={2.5}
-                py={2.5}
-                rounded={10}
+                px={4}
+                py={3}
+                rounded={18}
                 maxW={'18rem'}
+                bg={'gray.800'}
                 backdropFilter={'blur(8px)'}
-                bg={'rgba(255, 255, 255, 0.6)'}
               >
                 <Text
                   fontSize={13}
-                  color={'gray.600'}
+                  color={'white'}
                 >
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
-                  eveniet blanditiis vel.
+                  Taxes are grouped into four sections. Choose any section to
+                  view the taxes in that section and make payment.
                 </Text>
               </Tooltip.Content>
             </Tooltip.Positioner>
@@ -64,86 +66,87 @@ export const List = () => {
         </Flex>
       </Box>
 
-      <Box
-        mx={5}
-        my={6}
-      >
-        <SegmentGroup.Root
-          rounded={32}
-          width={'full'}
-          value={value}
-          onValueChange={(group) => setValue(group.value!)}
-        >
-          <SegmentGroup.Indicator
+      <Box py={3}>
+        <Box mx={5}>
+          <SegmentGroup.Root
             rounded={32}
-            bg={'white'}
-          />
-          <SegmentGroup.Items
-            style={{
-              width: '100%',
-              height: '2rem',
-              cursor: 'pointer',
-              fontWeight: 'medium',
-              textTransform: 'capitalize',
-            }}
-            items={Object.keys(Taxes).map((key) => key)}
-          />
-        </SegmentGroup.Root>
-      </Box>
-
-      <Box
-        mx={5}
-        my={5}
-        rounded={16}
-        bg={'gray.100'}
-        overflow={'hidden'}
-      >
-        <Tabs.Root
-          value={value}
-          spaceY={1}
-          onValueChange={(group) => setValue(group.value!)}
+            width={'full'}
+            value={value}
+            onValueChange={(group) => setValue(group.value!)}
+          >
+            <SegmentGroup.Indicator
+              rounded={32}
+              bg={'white'}
+            />
+            <SegmentGroup.Items
+              style={{
+                width: '100%',
+                height: '2rem',
+                cursor: 'pointer',
+                fontWeight: 'medium',
+                letterSpacing: '-1%',
+                textTransform: 'capitalize',
+              }}
+              items={Object.keys(Taxes).map((key) => key)}
+            />
+          </SegmentGroup.Root>
+        </Box>
+        <Box
+          mx={5}
+          mt={4}
+          rounded={16}
+          bg={'gray.100'}
+          overflow={'hidden'}
         >
-          {Object.keys(Taxes).map((key) => (
-            <Tabs.Content
-              p={0}
-              key={key}
-              value={key}
-            >
-              {Taxes[key as keyof typeof Taxes].map((tax) => (
-                <Flex
-                  px={4}
-                  py={2}
-                  key={tax.name}
-                  width={'full'}
-                  cursor={'pointer'}
-                  alignItems={'start'}
-                  justifyContent={'start'}
-                  flexDirection={'column'}
-                  borderBottom={'3px solid'}
-                  borderBottomColor={'white'}
-                  transition={'all 400ms ease-in-out'}
-                  _hover={{ backgroundColor: 'gray.50' }}
-                  onClick={() => navigate(`/app/pay/${key}?taxId=${tax.id}`)}
-                >
-                  <Text
-                    fontSize={14}
-                    textAlign={'left'}
-                    fontWeight={'medium'}
+          <Tabs.Root
+            value={value}
+            spaceY={1}
+            onValueChange={(group) => setValue(group.value!)}
+          >
+            {Object.keys(Taxes).map((key) => (
+              <Tabs.Content
+                p={0}
+                key={key}
+                value={key}
+              >
+                {Taxes[key as keyof typeof Taxes].map((tax) => (
+                  <Flex
+                    px={4}
+                    py={2}
+                    key={tax.name}
+                    width={'full'}
+                    cursor={'pointer'}
+                    alignItems={'start'}
+                    justifyContent={'start'}
+                    flexDirection={'column'}
+                    borderBottom={'3px solid'}
+                    borderBottomColor={'white'}
+                    transition={'all 400ms ease-in-out'}
+                    _hover={{ backgroundColor: 'gray.50' }}
+                    onClick={() => navigate(`/app/pay/${key}?taxId=${tax.id}`)}
                   >
-                    {tax.name}
-                  </Text>
-                  <Text
-                    fontSize={13}
-                    textAlign={'left'}
-                    color={'gray.600'}
-                  >
-                    {tax.description}
-                  </Text>
-                </Flex>
-              ))}
-            </Tabs.Content>
-          ))}
-        </Tabs.Root>
+                    <Text
+                      fontSize={14}
+                      textAlign={'left'}
+                      fontWeight={'medium'}
+                      letterSpacing={'-1%'}
+                    >
+                      {tax.name}
+                    </Text>
+                    <Text
+                      fontSize={13}
+                      textAlign={'left'}
+                      color={'gray.600'}
+                      letterSpacing={'-1%'}
+                    >
+                      {tax.description}
+                    </Text>
+                  </Flex>
+                ))}
+              </Tabs.Content>
+            ))}
+          </Tabs.Root>
+        </Box>
       </Box>
     </React.Fragment>
   );

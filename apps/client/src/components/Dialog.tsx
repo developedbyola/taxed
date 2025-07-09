@@ -200,20 +200,21 @@ const DialogComponent = ({
           <Heading
             mt={3}
             mx={'auto'}
-            maxW={'16rem'}
             fontSize={20}
+            maxW={'16rem'}
             color={'gray.900'}
             textAlign={'center'}
             lineHeight={'short'}
+            letterSpacing={'-1%'}
             fontWeight={'semibold'}
-            letterSpacing={'-0.015em'}
           >
             {title}
           </Heading>
           <Text
-            mt={0.5}
+            mt={1}
             mx={'auto'}
-            maxW={'20rem'}
+            fontSize={14}
+            maxW={'21rem'}
             color={'gray.500'}
             textAlign={'center'}
           >

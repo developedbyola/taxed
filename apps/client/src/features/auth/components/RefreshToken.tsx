@@ -3,36 +3,18 @@ import Cookies from 'js-cookie';
 import { trpc } from '@/libs/trpc';
 import { useAuth } from './Provider';
 import { useDialog } from '@/components';
-import { useNavigate } from 'react-router';
 
 const useRefreshToken = () => {
   const dialog = useDialog();
   const { setAuth } = useAuth();
-  const navigate = useNavigate();
 
   const refresh = trpc.auth.refresh.useMutation({
-    onError: (err) => {
+    onError: (err, data) => {
       if (err.message.includes('expired')) {
-        dialog.open({
-          title: 'Session Expired',
-          message:
-            'Your session has expired. Sign in again to continue where you left off.',
-          actions: [
-            {
-              label: 'Login',
-              variant: 'solid',
-              onClick: () => {
-                setAuth({
-                  type: 'LOGOUT',
-                });
-                Cookies.remove('refresh_token');
-                navigate('/login', {
-                  replace: true,
-                });
-              },
-            },
-          ],
+        setAuth({
+          type: 'LOGOUT',
         });
+        return;
       }
 
       dialog.open({
@@ -44,10 +26,10 @@ const useRefreshToken = () => {
           },
           {
             label: 'Reload',
+            variant: 'solid',
             onClick: async () => {
-              const refreshToken = Cookies.get('refresh_token');
               await refresh.mutateAsync({
-                refreshToken: refreshToken!,
+                refreshToken: data.refreshToken,
               });
             },
           },
@@ -59,6 +41,7 @@ const useRefreshToken = () => {
         type: 'LOGIN',
         payload: {
           auth: {
+            isPending: false,
             accessToken: data?.accessToken,
             isAuthenticated: true,
           },

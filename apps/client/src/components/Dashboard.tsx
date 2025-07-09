@@ -121,8 +121,9 @@ const MenuItem = ({ item }: { item: (typeof Items)[0] }) => {
     >
       <Icon size={'md'}>{item.icon}</Icon>
       <Text
-        fontSize={14}
+        fontSize={13}
         fontWeight={'medium'}
+        letterSpacing={'-3%'}
       >
         {item.name}
       </Text>
@@ -132,7 +133,10 @@ const MenuItem = ({ item }: { item: (typeof Items)[0] }) => {
 
 const Menubar = () => {
   return (
-    <Flex>
+    <Flex
+      height='64px'
+      alignItems={'center'}
+    >
       {Items.map((item, index) => (
         <MenuItem
           item={item}

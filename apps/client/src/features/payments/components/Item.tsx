@@ -150,6 +150,7 @@ export const Item = () => {
           size='sm'
           rounded={12}
           variant='ghost'
+          letterSpacing={'-3%'}
           onClick={() => navigate(-1)}
         >
           <Icon>
@@ -177,7 +178,7 @@ export const Item = () => {
           fontSize={20}
           maxW={'18rem'}
           textAlign={'center'}
-          letterSpacing={'tight'}
+          letterSpacing={'-3%'}
         >
           {tax.name}
         </Heading>
@@ -187,6 +188,7 @@ export const Item = () => {
           maxW={'21rem'}
           color={'gray.500'}
           textAlign={'center'}
+          letterSpacing={'-1%'}
         >
           {tax.description} {tax.rate}
         </Text>

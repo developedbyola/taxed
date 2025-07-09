@@ -1,27 +1,37 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import { Auth } from '@/features/auth';
 import { Dashboard } from '@/components';
+import { useDialog } from '@/components';
+import { useNavigate } from 'react-router';
 import { Container, Flex } from '@chakra-ui/react';
 
 export const ProtectedLayout = () => {
-  const { setAuth } = Auth.useAuth();
+  const dialog = useDialog();
+  const navigate = useNavigate();
+  const { auth } = Auth.useAuth();
 
   React.useEffect(() => {
-    const accessToken = JSON.parse(
-      localStorage.getItem('access_token') as string
-    );
-    if (accessToken) {
-      setAuth({
-        type: 'LOGIN',
-        payload: {
-          auth: {
-            accessToken,
-            isAuthenticated: true,
+    if (!auth.isPending && !auth.isAuthenticated) {
+      dialog.open({
+        title: 'Session Expired',
+        message:
+          'Your session has expired. Sign in again to continue where you left off.',
+        actions: [
+          {
+            label: 'Login',
+            variant: 'solid',
+            onClick: () => {
+              Cookies.remove('refresh_token');
+              navigate('/login', {
+                replace: true,
+              });
+            },
           },
-        },
+        ],
       });
     }
-  }, []);
+  }, [auth.isAuthenticated, auth.isPending]);
 
   return (
     <Flex
