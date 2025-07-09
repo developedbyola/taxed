@@ -110,7 +110,7 @@ const PasswordForm = () => {
     },
     onError: (error, data) => {
       dialog.open({
-        title: 'Unable to change password',
+        title: 'Password change failed',
         message: error.message,
         actions: [
           { label: 'Close' },
@@ -166,6 +166,7 @@ const PasswordForm = () => {
           </Icon>
           <Field.TextField
             fontSize={14}
+            autoComplete='new-password'
             placeholder='Enter your new password'
           />
         </Field.Content>
