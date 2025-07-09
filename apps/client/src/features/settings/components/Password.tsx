@@ -1,20 +1,20 @@
 import React from 'react';
-import { User } from '@/features/users';
-import { emailSchema } from '../schemas';
-import { useForm } from 'react-hook-form';
-import { LucideKey, LucideMail } from 'lucide-react';
-import { Field, useDialog } from '@/components';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Heading, Icon, Spinner, Text } from '@chakra-ui/react';
 import { trpc } from '@/libs/trpc';
 import { Auth } from '@/features/auth';
+import { User } from '@/features/users';
+import { useForm } from 'react-hook-form';
+import { passwordSchema } from '../schemas';
+import { Field, useDialog } from '@/components';
+import { LucideKey, LucideMail } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Box, Button, Heading, Icon, Spinner, Text } from '@chakra-ui/react';
 
 const IsoIcon = () => {
   return (
     <svg
       width='120'
       height='120'
-      viewBox='0 0 103 115'
+      viewBox='0 0 98 122'
       fill='#c8e7ff'
       xmlns='http://www.w3.org/2000/svg'
       stroke-width='2px'
@@ -23,52 +23,52 @@ const IsoIcon = () => {
       style={{ marginInline: 'auto' }}
     >
       <path
-        d='M13.6797 14.6404L15.1997 13.8804C14.6797 14.1004 14.1697 14.3604 13.6797 14.6404Z'
+        d='M44.9299 74.7334L39.7499 65.7934L23.1299 37.1134L17.1199 26.7534L8.84985 12.4934L4.16992 15.1534L12.2999 29.1734L12.6199 29.7334C11.6099 29.8334 10.6699 30.0634 9.79993 30.4234C9.32993 30.6134 8.88985 30.8334 8.46985 31.0934C7.36985 31.7734 6.40995 32.6834 5.56995 33.8434C3.81995 36.2834 2.93994 39.5834 2.93994 43.7234C2.93994 49.9934 4.85994 56.4334 8.68994 63.0334C12.5099 69.6434 17.1599 74.5234 22.6299 77.6734C26.2899 79.7934 29.5899 80.6634 32.5199 80.2734C33.7199 80.1134 34.8199 79.7934 35.8199 79.3034L36.0099 79.2034C37.3699 78.4934 38.5499 77.4734 39.5299 76.1334L40.1199 77.1434L64.5499 119.293L69.2198 116.623L44.9299 74.7334ZM29.1899 58.8734C29.1899 60.9434 28.5499 62.3434 27.2699 63.0834C25.9799 63.8134 24.4399 63.6634 22.6299 62.6134C20.8299 61.5734 19.2799 59.9434 17.9999 57.7334C16.7099 55.5134 16.0699 53.3734 16.0699 51.2934C16.0699 49.2134 16.7099 47.8234 17.9999 47.0934C19.2799 46.3634 20.8299 46.5134 22.6299 47.5534L23.2098 47.8834L29.1899 58.2134V58.8734Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M77.559 65.8103C75.499 59.1503 72.709 52.7703 69.179 46.6803C68.189 44.9803 67.149 43.3103 66.059 41.6803C63.279 37.4903 60.159 33.5602 56.729 29.8702C54.459 27.4302 52.0989 25.2102 49.6689 23.2202C47.0089 21.0402 44.269 19.1402 41.429 17.5002C36.069 14.4002 31.0189 12.6402 26.2889 12.2302C26.2389 12.2202 26.1889 12.2102 26.1389 12.2102C22.0289 11.8702 18.379 12.4302 15.199 13.8802L13.679 14.6402C10.149 16.6602 7.35895 19.8102 5.29895 24.0902C3.23895 28.3802 2.20898 33.6402 2.20898 39.8602C2.20898 46.0802 3.23895 52.5303 5.29895 59.2003C7.35895 65.8603 10.149 72.2402 13.679 78.3302C17.209 84.4102 21.3589 90.0202 26.1389 95.1402C30.9089 100.25 36.009 104.38 41.429 107.51C46.859 110.64 51.959 112.41 56.729 112.8C61.499 113.19 65.649 112.38 69.179 110.37C72.179 108.66 74.639 106.13 76.569 102.78C76.919 102.19 77.249 101.57 77.559 100.92C79.619 96.6302 80.6489 91.3702 80.6489 85.1502C80.6489 78.9302 79.619 72.4803 77.559 65.8103ZM53.199 55.8003L45.349 51.2702V78.2702L53.199 82.8003V91.8003L29.6689 78.2102V69.2102L36.799 73.3302L37.5089 73.7402V46.7402L29.6689 42.2102V33.2102L38.0189 38.0302L45.859 42.5603L53.199 46.8003V55.8003Z'
+        d='M29.1898 58.2133V58.8734C29.1898 60.9434 28.5498 62.3433 27.2698 63.0833C25.9798 63.8133 24.4398 63.6634 22.6298 62.6134C20.8298 61.5734 19.2798 59.9434 17.9998 57.7334C16.7098 55.5134 16.0698 53.3734 16.0698 51.2934C16.0698 49.2134 16.7098 47.8233 17.9998 47.0933C19.2798 46.3633 20.8298 46.5134 22.6298 47.5534L23.2097 47.8834L29.1898 58.2133Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M87.6582 101.13C88.1782 100.91 88.6882 100.65 89.1782 100.37L87.6582 101.13Z'
+        d='M89.2197 106.624L84.5498 109.294L64.5498 119.294L69.2197 116.624L84.3998 109.034L89.2197 106.624Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M45.348 69.8201V70.37L37.458 74.3101L29.668 78.21V69.21L36.798 73.33L37.5079 73.74L45.348 69.8201Z'
+        d='M89.2198 106.623L84.3999 109.033L69.2198 116.623L44.9299 74.7334L39.7499 65.7934L23.1299 37.1134L17.1199 26.7534L8.84985 12.4934L28.8499 2.49341L56.9598 50.9834L41.7399 58.5934L48.3799 70.0434L49.7098 72.3334L67.9899 103.863L68.5699 104.193L78.6699 99.1434L83.4899 96.7334L89.2198 106.623Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M53.198 82.8002V91.8002L29.668 78.2101L37.458 74.3102L45.348 70.3701V78.2701L53.198 82.8002Z'
+        d='M88.5698 86.2034V94.1934L83.4897 96.7334L78.6698 99.1434L68.5698 104.193V89.1334L75.0298 92.8634L75.1298 92.9234L79.8998 90.5434L84.6798 88.1534L88.5698 86.2034Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M53.1976 47.3501V55.8002L45.3477 51.2701L53.1976 47.3501Z'
+        d='M95.1299 67.8633V82.9233L88.5699 86.2032L84.6799 88.1533L79.8999 90.5433L75.1299 92.9233V77.8633L77.9099 76.4733L95.1299 67.8633Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M38.0179 38.03L29.668 42.21V33.21L38.0179 38.03Z'
+        d='M95.1298 67.8633L77.9098 76.4733L75.1298 77.8633L71.2498 75.6233L61.9098 70.2333L57.8898 67.9133L41.7397 58.5933L61.7397 48.5933L95.1298 67.8633Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M45.858 42.5601L37.5079 46.74L29.668 42.21L38.0179 38.03L45.858 42.5601Z'
+        d='M75.1298 77.8633V92.9233L75.0298 92.8633L68.5698 89.1333V104.193L67.9897 103.863L49.7097 72.3333L48.3798 70.0433L41.7397 58.5933L57.8898 67.9133L61.9098 70.2333L71.2498 75.6233L75.1298 77.8633Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M100.649 75.1501C100.649 81.3701 99.6192 86.6301 97.5592 90.9201C95.4992 95.2001 92.7092 98.3501 89.1792 100.37L69.1792 110.37C72.1792 108.66 74.6392 106.13 76.5692 102.78C76.9192 102.19 77.2492 101.57 77.5592 100.92C79.6192 96.6301 80.6492 91.3701 80.6492 85.1501C80.6492 78.9301 79.6192 72.4801 77.5592 65.8101C75.4992 59.1501 72.7092 52.7701 69.1792 46.6801C68.1892 44.9801 67.1492 43.3101 66.0592 41.6801C63.2792 37.4901 60.1592 33.5601 56.7292 29.8701C54.4592 27.4301 52.0992 25.2101 49.6692 23.2201C47.0092 21.0401 44.2692 19.1401 41.4292 17.5001C36.0692 14.4001 31.0192 12.6401 26.2892 12.2301C26.2392 12.2201 26.1892 12.21 26.1392 12.21C22.0292 11.87 18.3792 12.4301 15.1992 13.8801L33.6792 4.6401C37.2092 2.6301 41.3592 1.82005 46.1392 2.21005C50.9092 2.60005 56.0092 4.37009 61.4292 7.50009C66.8592 10.6301 71.9592 14.7601 76.7292 19.8701C81.4992 24.9901 85.6492 30.6001 89.1792 36.6801C92.7092 42.7701 95.4992 49.1501 97.5592 55.8101C99.6192 62.4801 100.649 68.9201 100.649 75.1501Z'
+        d='M12.6198 29.7333C11.6098 29.8333 10.6698 30.0633 9.7998 30.4233L12.2998 29.1733L12.6198 29.7333Z'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
       <path
-        d='M53.1998 46.8V47.35L45.3499 51.27V69.8201L37.5098 73.74V46.74L45.8599 42.5601L53.1998 46.8Z'
+        d='M40.1198 77.1433L36.0098 79.2033'
         stroke='#229EFF'
         stroke-linejoin='round'
       />
@@ -82,23 +82,23 @@ const PasswordForm = () => {
   const { setAuth } = Auth.useAuth();
 
   const defaultValues = {
-    email: user?.email || '',
-    password: '',
+    currentPassword: '',
+    newPassword: '',
   };
 
   const form = useForm({
     mode: 'all',
     defaultValues,
-    resolver: zodResolver(emailSchema),
+    resolver: zodResolver(passwordSchema),
   });
 
-  const changeEmail = trpc.users.changeEmail.useMutation({
+  const changePassword = trpc.users.changePassword.useMutation({
     onSuccess: () => {
       dialog.open({
         variant: 'success',
-        title: 'Email changed',
+        title: 'Password changed',
         message:
-          'Your email has been changed successfully. You will be logged out after you close this dialog.',
+          'Your password has been changed successfully. You will be logged out after you close this dialog.',
         actions: [
           {
             variant: 'solid',
@@ -112,7 +112,7 @@ const PasswordForm = () => {
     },
     onError: (error, data) => {
       dialog.open({
-        title: 'Unable to change email',
+        title: 'Unable to change password',
         message: error.message,
         actions: [
           { label: 'Close' },
@@ -120,9 +120,9 @@ const PasswordForm = () => {
             variant: 'solid',
             label: 'Try again',
             onClick: () => {
-              changeEmail.mutate({
-                password: data.password,
-                email: data.email.toLowerCase(),
+              changePassword.mutate({
+                newPassword: data.newPassword,
+                currentPassword: data.currentPassword,
               });
             },
           },
@@ -138,10 +138,11 @@ const PasswordForm = () => {
   return (
     <form
       style={{ display: 'flex', gap: 8, flexDirection: 'column' }}
-      onSubmit={form.handleSubmit((data) => changeEmail.mutate(data))}
+      onSubmit={form.handleSubmit((data) => changePassword.mutate(data))}
     >
       <Field.Root
-        name='email'
+        textHidden
+        name='currentPassword'
         control={form.control as any}
       >
         <Field.Content height='2.5rem'>
@@ -153,13 +154,13 @@ const PasswordForm = () => {
           </Icon>
           <Field.TextField
             fontSize={14}
-            placeholder='Enter a valid email address'
+            placeholder='Enter your current password'
           />
         </Field.Content>
       </Field.Root>
       <Field.Root
         textHidden
-        name='password'
+        name='newPassword'
         control={form.control as any}
       >
         <Field.Content height='2.5rem'>
@@ -171,7 +172,7 @@ const PasswordForm = () => {
           </Icon>
           <Field.TextField
             fontSize={14}
-            placeholder='Enter your password'
+            placeholder='Enter your new password'
           />
         </Field.Content>
       </Field.Root>
@@ -186,10 +187,10 @@ const PasswordForm = () => {
         disabled={
           !form.formState.isValid ||
           !form.formState.isDirty ||
-          changeEmail.isPending
+          changePassword.isPending
         }
       >
-        {changeEmail.isPending ? <Spinner size='sm' /> : 'Change email'}
+        {changePassword.isPending ? <Spinner size='sm' /> : 'Change password'}
       </Button>
     </form>
   );

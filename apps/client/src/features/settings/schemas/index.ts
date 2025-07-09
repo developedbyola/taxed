@@ -45,6 +45,11 @@ const password = z
     message: 'Password must contain at least one special character',
   });
 
+export const passwordSchema = z.object({
+  currentPassword: password,
+  newPassword: password,
+});
+
 export const emailSchema = z.object({
   email,
   password,
