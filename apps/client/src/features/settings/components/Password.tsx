@@ -1,7 +1,6 @@
 import React from 'react';
 import { trpc } from '@/libs/trpc';
 import { Auth } from '@/features/auth';
-import { User } from '@/features/users';
 import { LucideKey } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { passwordSchema } from '../schemas';
@@ -78,7 +77,6 @@ const IsoIcon = () => {
 
 const PasswordForm = () => {
   const dialog = useDialog();
-  const { user } = User.useUser();
   const { setAuth } = Auth.useAuth();
 
   const defaultValues = {
@@ -131,10 +129,6 @@ const PasswordForm = () => {
     },
   });
 
-  React.useEffect(() => {
-    form.reset(defaultValues);
-  }, [user]);
-
   return (
     <form
       style={{ display: 'flex', gap: 8, flexDirection: 'column' }}
@@ -184,11 +178,7 @@ const PasswordForm = () => {
         rounded={12}
         height={'fit'}
         type='submit'
-        disabled={
-          !form.formState.isValid ||
-          !form.formState.isDirty ||
-          changePassword.isPending
-        }
+        disabled={!form.formState.isValid || changePassword.isPending}
       >
         {changePassword.isPending ? <Spinner size='sm' /> : 'Change password'}
       </Button>
