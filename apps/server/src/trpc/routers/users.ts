@@ -163,7 +163,7 @@ export const usersRouter = router({
 
         if (!isSamePassword) {
           return ctx.fail({
-            message: 'The password you entered is incorrect. Please try again.',
+            message: 'The password you entered is incorrect.',
             code: 'UNAUTHORIZED',
           });
         }
