@@ -31,7 +31,7 @@ export const authRouter = router({
           .eq('email', email.toLowerCase())
           .single();
 
-        if (user.error) {
+        if (user.error || !user.data) {
           return ctx.fail({
             code: 'UNAUTHORIZED',
             message:
