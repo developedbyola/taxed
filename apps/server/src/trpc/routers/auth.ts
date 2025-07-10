@@ -28,7 +28,7 @@ export const authRouter = router({
         const user = await ctx.supabase
           .from('users')
           .select('id, created_at, first_name, last_name, email, password')
-          .eq('email', email)
+          .eq('email', email.toLowerCase())
           .single();
 
         if (user.error) {
@@ -161,9 +161,9 @@ export const authRouter = router({
         const user = await ctx.supabase
           .from('users')
           .insert({
-            first_name: firstName,
-            last_name: lastName,
-            email,
+            first_name: firstName.toLowerCase(),
+            last_name: lastName.toLowerCase(),
+            email: email.toLowerCase(),
             password: hashedPassword,
           })
           .select('id, created_at, first_name, last_name, email')
