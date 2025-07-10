@@ -1,13 +1,18 @@
 import React from 'react';
-import { LucideChevronRight } from 'lucide-react';
-import { Box, Flex, Heading, Icon, IconButton } from '@chakra-ui/react';
-import { Transactions } from '@/features/transactions';
 import { useNavigate } from 'react-router';
+import { Helmet } from 'react-helmet-async';
+import { LucideChevronRight } from 'lucide-react';
+import { Transactions } from '@/features/transactions';
+import { Box, Flex, Heading, Icon, Button } from '@chakra-ui/react';
 
 export const AppHomeRoute = () => {
   const navigate = useNavigate();
   return (
     <React.Fragment>
+      <Helmet>
+        <title>Taxed | Home</title>
+      </Helmet>
+
       <Flex
         py={4}
         px={5}
@@ -35,17 +40,18 @@ export const AppHomeRoute = () => {
             Recent payments
           </Heading>
 
-          <IconButton
+          <Button
+            gap={0.25}
             size={'xs'}
-            aspectRatio={1}
-            rounded={'full'}
-            variant={'ghost'}
+            rounded={12}
+            variant={'outline'}
             onClick={() => navigate('/app/transactions')}
           >
-            <Icon size={'md'}>
-              <LucideChevronRight />
+            More
+            <Icon>
+              <LucideChevronRight size={16} />
             </Icon>
-          </IconButton>
+          </Button>
         </Flex>
         <Box
           px={5}
