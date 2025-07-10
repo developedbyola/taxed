@@ -177,11 +177,10 @@ export const usersRouter = router({
             password: hashedPassword,
           })
           .eq('id', ctx.actor.userId)
-          .select('id, name, created_at')
+          .select('id, first_name, last_name, email, created_at')
           .single();
 
         if (updatedUser.error) {
-          console.error('Password update error:', updatedUser.error);
           return ctx.fail({
             message:
               'We encountered an issue while updating your password. Please try again later.',
