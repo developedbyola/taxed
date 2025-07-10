@@ -4,7 +4,17 @@ import { useDialog } from '@/components';
 import { excerpt } from '@/utils/excerpt';
 import { useNavigate } from 'react-router';
 import { useTransactions } from './Provider';
-import { Box, Flex, Image, Spinner, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Spinner,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 
 const useGetTransactions = () => {
   const dialog = useDialog();
@@ -67,7 +77,77 @@ const Loader = () => {
 };
 
 const Empty = () => {
-  return <VStack></VStack>;
+  const navigate = useNavigate();
+
+  return (
+    <VStack
+      mt={6}
+      gap={0}
+    >
+      {[
+        { x: 8, y: 8, rotate: -6 },
+        { x: 4, y: 14, rotate: -2 },
+      ].map((item, index) => {
+        return (
+          <HStack
+            gap={1}
+            py={0.5}
+            key={index}
+            ring={'1px'}
+            rounded={12}
+            bg={'white'}
+            ringColor={'gray.200'}
+            transform={`translate(${item.x}px, ${item.y}px) rotate(${item.rotate}deg)`}
+          >
+            <Box
+              ml={0.5}
+              width={2.5}
+              bg={'blue.500'}
+              aspectRatio={1}
+              rounded={'full'}
+            />
+            <Box
+              mr={1}
+              width={12}
+              height={2}
+              rounded={8}
+              bg='gray.200'
+            />
+          </HStack>
+        );
+      })}
+
+      <Heading
+        mt={10}
+        fontSize={14}
+        lineHeight={1.4}
+        textAlign={'center'}
+      >
+        No transactions found
+      </Heading>
+      <Text
+        mt={2}
+        fontSize={13}
+        color='gray.500'
+        textAlign={'center'}
+      >
+        You have not made any transactions yet
+      </Text>
+      <Button
+        px={4}
+        mt={4}
+        py={1.5}
+        rounded={12}
+        fontSize={13}
+        height={'fit'}
+        variant='outline'
+        colorScheme='blue'
+        onClick={() => navigate('/app/pay')}
+      >
+        Pay tax
+      </Button>
+    </VStack>
+  );
 };
 
 const Map = () => {
