@@ -51,7 +51,6 @@ export const authRouter = router({
           });
         }
 
-        // Get session data
         const {
           deviceName,
           deviceType,
@@ -62,7 +61,6 @@ export const authRouter = router({
           expiresAt,
         } = await auth.session(ctx.honoContext);
 
-        // Create session
         const session = await ctx.supabase
           .from('user_sessions')
           .upsert(
@@ -82,7 +80,6 @@ export const authRouter = router({
           .select('id')
           .single();
 
-        // Check if session was created
         if (!session.data) {
           return ctx.fail({
             code: 'INTERNAL_SERVER_ERROR',
