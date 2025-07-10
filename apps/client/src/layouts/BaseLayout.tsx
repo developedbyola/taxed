@@ -23,6 +23,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import SettingsProfile from '@/routes/app/settings/Profile';
 import SettingsAccount from '@/routes/app/settings/Account';
 import SettingsPassword from '@/routes/app/settings/Password';
+import SettingsSourceCode from '@/routes/app/settings/SourceCode';
 
 const config = mergeConfigs(
   defaultConfig,
@@ -98,6 +99,10 @@ const BaseLayout = () => {
                         <Route
                           path='settings/password'
                           element={<SettingsPassword />}
+                        />
+                        <Route
+                          path='settings/source-code'
+                          element={<SettingsSourceCode />}
                         />
                       </Route>
                     </Routes>
