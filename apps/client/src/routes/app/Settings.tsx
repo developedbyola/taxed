@@ -6,7 +6,7 @@ const SettingsRoute = () => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Settings</title>
+        <title>Taxed | Settings</title>
       </Helmet>
       <Settings.List />
     </React.Fragment>

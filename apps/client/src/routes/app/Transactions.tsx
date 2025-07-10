@@ -1,18 +1,13 @@
 import React from 'react';
-import { User } from '@/features/users';
 import { Helmet } from 'react-helmet-async';
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import { Transactions } from '@/features/transactions';
 
 const TransactionsRoute = () => {
-  const { user } = User.useUser();
-
   return (
     <React.Fragment>
       <Helmet>
-        <title>
-          {user ? `${user.firstName} | Transactions` : 'Transactions'}
-        </title>
+        <title>Taxed | Transactions</title>
       </Helmet>
       <Box py={4}>
         <Flex px={5}>
