@@ -7,7 +7,6 @@ import { Field, useDialog } from '@/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Box, Spinner } from '@chakra-ui/react';
 import { BaseLayout } from '../layouts/BaseLayout';
-import Cookies from 'js-cookie';
 
 export const Login = () => {
   const dialog = useDialog();
@@ -25,19 +24,12 @@ export const Login = () => {
         type: 'LOGIN',
         payload: {
           auth: {
-            isPending: false,
-            isAuthenticated: true,
             accessToken: data?.accessToken,
+            refreshToken: data?.refreshToken,
           },
         },
       });
 
-      Cookies.set('refresh_token', data?.refreshToken, {
-        expires: 30,
-        secure: false,
-        httpOnly: false,
-        sameSite: 'Lax',
-      });
       navigate('/app', {
         replace: true,
       });

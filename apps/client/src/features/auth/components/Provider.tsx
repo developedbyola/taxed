@@ -1,16 +1,23 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 
 type Auth = {
   isPending: boolean;
   isAuthenticated: boolean;
   accessToken: string | undefined;
+  refreshToken: string | undefined;
 };
 
 type State = {
   auth: Auth;
 };
 
-type Action = { type: 'LOGIN'; payload: { auth: Auth } } | { type: 'LOGOUT' };
+type Action =
+  | {
+      type: 'LOGIN';
+      payload: { auth: Pick<Auth, 'accessToken' | 'refreshToken'> };
+    }
+  | { type: 'LOGOUT' };
 type Context = State & {
   setAuth: React.Dispatch<Action>;
 };
@@ -28,14 +35,30 @@ export const useAuth = () => {
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'LOGIN':
-      return { ...state, auth: action.payload.auth };
+      Cookies.set('refresh_token', action.payload.auth.refreshToken!, {
+        expires: 30,
+        secure: false,
+        httpOnly: false,
+        sameSite: 'Lax',
+      });
+      return {
+        ...state,
+        auth: {
+          isPending: false,
+          isAuthenticated: true,
+          accessToken: action.payload.auth.accessToken,
+          refreshToken: action.payload.auth.refreshToken,
+        },
+      };
     case 'LOGOUT':
+      Cookies.remove('refresh_token');
       return {
         ...state,
         auth: {
           isPending: false,
           accessToken: undefined,
           isAuthenticated: false,
+          refreshToken: undefined,
         },
       };
     default:
@@ -50,6 +73,7 @@ export const Provider = ({
       isPending: true,
       accessToken: undefined,
       isAuthenticated: false,
+      refreshToken: Cookies.get('refresh_token'),
     },
   },
 }: {

@@ -2,15 +2,15 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Settings } from '@/features/settings';
 
-const SettingsTerms = () => {
+const SettingsSessions = () => {
   return (
     <React.Fragment>
       <Helmet>
-        <title>Terms of Service</title>
+        <title>Settings | Sessions</title>
       </Helmet>
-      <Settings.Terms />
+      <Settings.Sessions />
     </React.Fragment>
   );
 };
 
-export default SettingsTerms;
+export default SettingsSessions;

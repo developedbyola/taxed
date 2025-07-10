@@ -1,12 +1,11 @@
 import React from 'react';
-import Cookies from 'js-cookie';
 import { trpc } from '@/libs/trpc';
 import { useAuth } from './Provider';
 import { useDialog } from '@/components';
 
 const useRefreshToken = () => {
   const dialog = useDialog();
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   const refresh = trpc.auth.refresh.useMutation({
     onError: (err, data) => {
@@ -18,7 +17,7 @@ const useRefreshToken = () => {
       }
 
       dialog.open({
-        title: 'Connection error',
+        title: 'Authentication error',
         message: err.message,
         actions: [
           {
@@ -41,26 +40,24 @@ const useRefreshToken = () => {
         type: 'LOGIN',
         payload: {
           auth: {
-            isPending: false,
             accessToken: data?.accessToken,
-            isAuthenticated: true,
+            refreshToken: data?.refreshToken,
           },
         },
-      });
-      Cookies.set('refresh_token', data?.refreshToken, {
-        expires: 30,
-        secure: false,
-        httpOnly: false,
-        sameSite: 'Lax',
       });
     },
   });
 
   const mutate = React.useCallback(async () => {
-    const refreshToken = Cookies.get('refresh_token');
+    if (!auth?.refreshToken) {
+      setAuth({
+        type: 'LOGOUT',
+      });
+      return;
+    }
 
     await refresh.mutateAsync({
-      refreshToken: refreshToken!,
+      refreshToken: auth.refreshToken,
     });
   }, []);
 

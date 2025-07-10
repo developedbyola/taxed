@@ -1,6 +1,6 @@
-import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router';
+import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
 
 const IsoCon = () => {
   return (
@@ -124,12 +124,12 @@ export const SourceCode = () => {
             color='gray.500'
             textAlign={'center'}
           >
-            View repository on GitHub
+            Explore the complete source code and project details on GitHub
           </Text>
 
           <Link
-            to={''}
             target='_blank'
+            to={'https://github.com/developedbyola/taxed'}
           >
             <Button
               mt={6}

@@ -33,8 +33,8 @@ const items = [
     icon: <LucideCode />,
   },
   {
-    label: 'Session',
-    path: '/app/settings/session',
+    label: 'Sessions',
+    path: '/app/settings/sessions',
     icon: <LucideCookie />,
   },
   {

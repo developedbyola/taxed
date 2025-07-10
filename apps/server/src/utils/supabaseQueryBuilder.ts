@@ -5,6 +5,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 // Zod Schemas for validation
 export const querySchema = z.object({
   table: z.string(),
+  equal: z.array(z.string()),
   filters: z
     .array(
       z.object({
@@ -74,7 +75,8 @@ export class SupabaseQueryBuilder<T = any> {
       .select(
         validated.select,
         validated.count ? { count: validated.count } : undefined
-      );
+      )
+      .eq(validated.equal[0] || '', validated.equal[1]);
 
     // Apply filters
     if (validated.filters) {

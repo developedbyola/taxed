@@ -24,6 +24,9 @@ import SettingsProfile from '@/routes/app/settings/Profile';
 import SettingsAccount from '@/routes/app/settings/Account';
 import SettingsPassword from '@/routes/app/settings/Password';
 import SettingsSourceCode from '@/routes/app/settings/SourceCode';
+import SettingsSessions from '@/routes/app/settings/Sessions';
+import SettingsTerms from '@/routes/app/settings/Terms';
+import SettingsAbout from '@/routes/app/settings/About';
 
 const config = mergeConfigs(
   defaultConfig,
@@ -103,6 +106,18 @@ const BaseLayout = () => {
                         <Route
                           path='settings/source-code'
                           element={<SettingsSourceCode />}
+                        />
+                        <Route
+                          path='settings/sessions'
+                          element={<SettingsSessions />}
+                        />
+                        <Route
+                          path='settings/terms'
+                          element={<SettingsTerms />}
+                        />
+                        <Route
+                          path='settings/about'
+                          element={<SettingsAbout />}
                         />
                       </Route>
                     </Routes>

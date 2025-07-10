@@ -116,8 +116,9 @@ export const transactionsRouter = router({
         const queryBuilder = new SupabaseQueryBuilder(ctx.supabase);
 
         const { data: transactions } = await queryBuilder.query({
-          table: 'user_transactions',
           select: '*',
+          table: 'user_transactions',
+          equal: ['user_id', ctx.actor.userId],
           ...input,
         });
 
