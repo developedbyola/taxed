@@ -4,7 +4,7 @@ import { useDialog } from '@/components';
 import { excerpt } from '@/utils/excerpt';
 import { useNavigate } from 'react-router';
 import { useTransactions } from './Provider';
-import { Box, Flex, Image, Spinner, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Spinner, Text, VStack } from '@chakra-ui/react';
 
 const useGetTransactions = () => {
   const dialog = useDialog();
@@ -67,7 +67,7 @@ const Loader = () => {
 };
 
 const Empty = () => {
-  return <React.Fragment></React.Fragment>;
+  return <VStack></VStack>;
 };
 
 const Map = () => {
