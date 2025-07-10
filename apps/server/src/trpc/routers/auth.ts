@@ -25,7 +25,6 @@ export const authRouter = router({
       const { email, password } = input;
 
       try {
-        // Get user from database
         const user = await ctx.supabase
           .from('users')
           .select('id, created_at, first_name, last_name, email, password')
@@ -40,22 +39,10 @@ export const authRouter = router({
           });
         }
 
-        // Check if user exists
-        if (!user.data) {
-          return ctx.fail({
-            code: 'UNAUTHORIZED',
-            message:
-              'The email you entered is incorrect. Please check your credentials and try again.',
-          });
-        }
-
-        // Check if password is valid
         const isPasswordValid = await argon2.verify(
           user.data.password,
           password
         );
-
-        // Check if password is valid
         if (!isPasswordValid) {
           return ctx.fail({
             code: 'UNAUTHORIZED',
