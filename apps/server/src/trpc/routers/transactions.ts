@@ -99,7 +99,15 @@ export const transactionsRouter = router({
         }
 
         return ctx.ok({
-          transaction,
+          transaction: {
+            ...transaction,
+            txId: transaction.tx_id,
+            userId: transaction.user_id,
+            flwRef: transaction.flw_ref,
+            txRef: transaction.tx_ref,
+            createdAt: transaction.created_at,
+            companyCode: transaction.company_code,
+          },
         });
       } catch (error: any) {
         return ctx.fail({
@@ -109,7 +117,7 @@ export const transactionsRouter = router({
       }
     }),
 
-  get: protectedProcedure
+  list: protectedProcedure
     .input(querySchema.partial())
     .query(async ({ ctx, input }) => {
       try {
@@ -133,10 +141,10 @@ export const transactionsRouter = router({
       }
     }),
 
-  getOne: protectedProcedure
+  getById: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        transactionId: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -144,7 +152,7 @@ export const transactionsRouter = router({
         const { data: transaction, error } = await ctx.supabase
           .from('user_transactions')
           .select('*')
-          .eq('id', input.id)
+          .eq('id', input.transactionId)
           .eq('user_id', ctx.actor.userId)
           .single();
 
@@ -156,7 +164,15 @@ export const transactionsRouter = router({
         }
 
         return ctx.ok({
-          transaction,
+          transaction: {
+            ...transaction,
+            txId: transaction.tx_id,
+            userId: transaction.user_id,
+            flwRef: transaction.flw_ref,
+            txRef: transaction.tx_ref,
+            createdAt: transaction.created_at,
+            companyCode: transaction.company_code,
+          },
         });
       } catch (error: any) {
         return ctx.fail({

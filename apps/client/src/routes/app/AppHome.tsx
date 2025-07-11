@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
-import { LucideChevronRight } from 'lucide-react';
 import { Transactions } from '@/features/transactions';
-import { Box, Flex, Heading, Icon, Button } from '@chakra-ui/react';
+import { Box, Flex, Heading, Button } from '@chakra-ui/react';
 
 export const AppHomeRoute = () => {
   const navigate = useNavigate();
@@ -41,16 +40,16 @@ export const AppHomeRoute = () => {
           </Heading>
 
           <Button
+            px={3}
+            py={0.5}
             gap={0.25}
-            size={'xs'}
             rounded={12}
+            height={'fit'}
+            fontSize={12}
             variant={'outline'}
             onClick={() => navigate('/app/transactions')}
           >
-            More
-            <Icon>
-              <LucideChevronRight size={16} />
-            </Icon>
+            All
           </Button>
         </Flex>
         <Box

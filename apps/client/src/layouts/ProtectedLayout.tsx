@@ -37,6 +37,7 @@ export const ProtectedLayout = () => {
     <Flex
       minH='100dvh'
       bg='gray.100'
+      p={{ base: 0, md: 4 }}
       alignItems={'center'}
       flexDirection={'column'}
       justifyContent={'center'}
@@ -44,14 +45,14 @@ export const ProtectedLayout = () => {
       <Container
         px={0}
         bg='white'
-        maxW='26rem'
-        shadow='xs'
-        rounded={24}
         overflow={'clip'}
+        rounded={{ base: 0, md: 24 }}
+        shadow={{ base: 'none', md: 'xs' }}
+        maxW={{ base: '100%', md: '26rem' }}
       >
         <Flex
-          height={'40rem'}
           flexDirection={'column'}
+          height={{ base: '100dvh', md: '46rem', lg: '48rem' }}
         >
           <Flex
             flex={1}

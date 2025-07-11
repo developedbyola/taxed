@@ -11,12 +11,10 @@ import {
   Button,
   Flex,
   Heading,
-  Icon,
   Image,
   Separator,
   Text,
 } from '@chakra-ui/react';
-import { LucideArrowLeft } from 'lucide-react';
 import { usePay } from '../hooks/usePay';
 
 type FormProps = {
@@ -147,16 +145,15 @@ export const Item = () => {
         justifyContent={'center'}
       >
         <Button
-          size='sm'
+          py={1}
+          px={2.5}
           rounded={12}
-          variant='ghost'
+          height={'fit'}
+          variant='outline'
           letterSpacing={'-3%'}
           onClick={() => navigate(-1)}
         >
-          <Icon>
-            <LucideArrowLeft />
-          </Icon>
-          Taxes
+          Back
         </Button>
       </Flex>
 

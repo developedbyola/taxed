@@ -19,7 +19,7 @@ import {
 const useGetTransactions = () => {
   const dialog = useDialog();
   const { setTransactions } = useTransactions();
-  const getTransactions = trpc.transactions.get.useQuery({
+  const getTransactions = trpc.transactions.list.useQuery({
     pagination: {
       type: 'offset',
       page: 1,
@@ -155,11 +155,7 @@ const Map = () => {
   const { transactions } = useTransactions();
 
   return (
-    <Box
-      spaceY={2}
-      divideY={'1px'}
-      divideColor={'gray.200'}
-    >
+    <Box spaceY={2}>
       {transactions.map((transaction) => (
         <Flex
           p={1}
@@ -167,7 +163,7 @@ const Map = () => {
           rounded={16}
           cursor={'pointer'}
           key={transaction.id}
-          alignItems={'center'}
+          alignItems={'flex-start'}
           _hover={{ bg: 'gray.100' }}
           transition={'all 0.2s ease-in-out'}
           onClick={() => navigate(`/app/transactions/${transaction.id}`)}
@@ -182,22 +178,25 @@ const Map = () => {
             src={transaction.meta.logo}
             alt={transaction.meta.title}
           />
-          <Box spaceY={1.5}>
+          <Box
+            flex={1}
+            spaceY={0.5}
+          >
             <Text
               fontSize={14}
-              lineHeight={1}
+              lineHeight={1.4}
               fontWeight={'medium'}
               letterSpacing={'-0.01em'}
             >
-              {transaction.meta.title} - {transaction.amount}{' '}
+              {excerpt(transaction.meta.title, 26)} - {transaction.amount}{' '}
               {transaction.currency}
             </Text>
             <Text
               fontSize={13}
-              lineHeight={1}
+              lineHeight={1.3}
               color={'gray.600'}
             >
-              {excerpt(transaction.meta.description, 36)}
+              {excerpt(transaction.meta.description, 34)}
             </Text>
           </Box>
         </Flex>

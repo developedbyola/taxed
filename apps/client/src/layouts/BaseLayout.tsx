@@ -27,6 +27,7 @@ import SettingsSourceCode from '@/routes/app/settings/SourceCode';
 import SettingsSessions from '@/routes/app/settings/Sessions';
 import SettingsTerms from '@/routes/app/settings/Terms';
 import SettingsAbout from '@/routes/app/settings/About';
+import TransactionRoute from '@/routes/app/Transaction';
 
 const config = mergeConfigs(
   defaultConfig,
@@ -86,6 +87,10 @@ const BaseLayout = () => {
                         <Route
                           path='transactions'
                           element={<TransactionsRoute />}
+                        />
+                        <Route
+                          path='transactions/:id'
+                          element={<TransactionRoute />}
                         />
                         <Route
                           path='settings'

@@ -1,9 +1,10 @@
+import { trpc } from '@/libs/trpc';
 import { useCallback } from 'react';
+import { User } from '@/features/users';
+import { useDialog } from '@/components';
 import { useNavigate } from 'react-router';
 import { useFlutterwave } from 'flutterwave-react-v3';
-import { trpc } from '@/libs/trpc';
-import { useDialog } from '@/components';
-import { User } from '@/features/users';
+import { Transactions } from '@/features/transactions';
 
 type PaymentMeta = {
   title: string;
@@ -27,8 +28,16 @@ export const usePay = (data: PaymentData, options?: UsePayOptions) => {
   const dialog = useDialog();
   const navigate = useNavigate();
   const { user } = User.useUser();
+  const { setTransactions } = Transactions.useTransactions();
+
   const createTransaction = trpc.transactions.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data: any) => {
+      setTransactions({
+        type: 'ADD_TRANSACTION',
+        payload: {
+          transaction: data?.transaction,
+        },
+      });
       dialog.open({
         variant: 'success',
         title: 'Transaction successful',
@@ -44,18 +53,22 @@ export const usePay = (data: PaymentData, options?: UsePayOptions) => {
       });
       options?.onSuccess?.();
     },
-    onError: (error) => {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
+    onError: (error, data) => {
       dialog.open({
         title: 'Transaction failed',
-        message: errorMessage,
-        actions: [{ label: 'OK' }],
+        message: error.message,
+        actions: [
+          {
+            variant: 'solid',
+            label: 'Try again',
+            onClick: () => createTransaction.mutateAsync(data),
+          },
+        ],
       });
 
       if (options?.onError) {
         const normalizedError =
-          error instanceof Error ? error : new Error(errorMessage);
+          error instanceof Error ? error : new Error(error.message);
         options.onError(normalizedError);
       }
     },

@@ -108,6 +108,8 @@ export const List = () => {
                 p={0}
                 key={key}
                 value={key}
+                divideY={'3px'}
+                divideColor={'white'}
               >
                 {Taxes[key as keyof typeof Taxes].map((tax) => (
                   <Flex
@@ -117,12 +119,10 @@ export const List = () => {
                     width={'full'}
                     cursor={'pointer'}
                     alignItems={'start'}
-                    justifyContent={'start'}
+                    justifyContent={'center'}
                     flexDirection={'column'}
-                    borderBottom={'3px solid'}
-                    borderBottomColor={'white'}
                     transition={'all 400ms ease-in-out'}
-                    _hover={{ backgroundColor: 'gray.50' }}
+                    _hover={{ backgroundColor: 'gray.200' }}
                     onClick={() => navigate(`/app/pay/${key}?taxId=${tax.id}`)}
                   >
                     <Text

@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Transaction = {
+export type Transaction = {
   id: string;
   amount: number;
   companyCode: string;
@@ -26,10 +26,15 @@ type State = {
   transactions: Transaction[];
 };
 
-type Action = {
-  type: 'SET_TRANSACTIONS';
-  payload: { transactions: Transaction[] };
-};
+type Action =
+  | {
+      type: 'SET_TRANSACTIONS';
+      payload: { transactions: Transaction[] };
+    }
+  | {
+      type: 'ADD_TRANSACTION';
+      payload: { transaction: Transaction };
+    };
 
 type Context = State & {
   setTransactions: React.ActionDispatch<[Action]>;
@@ -39,6 +44,11 @@ const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'SET_TRANSACTIONS':
       return { ...state, transactions: action.payload.transactions };
+    case 'ADD_TRANSACTION':
+      return {
+        ...state,
+        transactions: [...state.transactions, action.payload.transaction],
+      };
     default:
       return state;
   }

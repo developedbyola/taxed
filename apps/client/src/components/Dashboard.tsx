@@ -121,7 +121,7 @@ const MenuItem = ({ item }: { item: (typeof Items)[0] }) => {
     >
       <Icon size={'md'}>{item.icon}</Icon>
       <Text
-        fontSize={13}
+        fontSize={12}
         fontWeight={'medium'}
         letterSpacing={'-3%'}
       >
