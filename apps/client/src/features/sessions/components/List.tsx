@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 import { trpc } from '@/libs/trpc';
 import type { Session } from '../types';
 import { UAParser } from 'ua-parser-js';
@@ -74,7 +75,8 @@ export const List = () => {
                 lineHeight={1}
                 color='gray.500'
               >
-                {session.ipAddress}
+                {session.ipAddress}-{' '}
+                {dayjs(session.createdAt).format('DD/MM/YYYY')}
               </Text>
             </Box>
           </Flex>
