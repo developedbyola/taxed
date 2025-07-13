@@ -1,9 +1,9 @@
 import React from 'react';
 import { trpc } from '@/libs/trpc';
 import type { Session } from '../types';
-import { useDialog } from '@/components';
-import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
 import { UAParser } from 'ua-parser-js';
+import { useDialog } from '@/components';
+import { Box, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 
 const useListSessions = () => {
   const dialog = useDialog();
@@ -38,27 +38,45 @@ export const List = () => {
 
   return (
     <Box
+      rounded={12}
       bg='gray.100'
       divideY='3px'
+      overflow='clip'
       divideColor='white'
-      rounded={12}
     >
       {data?.sessions.map((session) => {
         const parser = new UAParser(session.userAgent);
 
         return (
           <Flex
-            p={2}
+            px={3}
             gap={1}
+            py={3}
             key={session.id}
+            cursor={'pointer'}
             flexDirection={'column'}
+            _hover={{ bg: 'gray.200' }}
+            transition={'all 300ms ease-in-out'}
           >
-            <Text>
-              {parser.getBrowser().name || 'Unknown'}{' '}
-              {parser.getOS().name || 'Unknown'}
-            </Text>
-            <Text>{session.createdAt}</Text>
-            <Text>{session.lastActiveAt}</Text>
+            <Box flex={1}>
+              <Heading
+                lineHeight={1}
+                fontSize={14}
+                fontWeight={'medium'}
+              >
+                {`${parser.getOS().name} ${parser.getBrowser().name} ${
+                  parser.getCPU().architecture
+                }`}
+              </Heading>
+              <Text
+                mt={2}
+                fontSize={12}
+                lineHeight={1}
+                color='gray.500'
+              >
+                {session.ipAddress}
+              </Text>
+            </Box>
           </Flex>
         );
       })}

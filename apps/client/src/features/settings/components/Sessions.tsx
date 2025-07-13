@@ -63,6 +63,7 @@ export const Sessions = () => {
     <React.Fragment>
       <Box py={4}>
         <VStack
+          px={5}
           gap={0}
           mt={12}
         >
@@ -89,7 +90,9 @@ export const Sessions = () => {
         </VStack>
 
         <Separator my={8} />
-        <SessionsFeature.List />
+        <Box px={5}>
+          <SessionsFeature.List />
+        </Box>
       </Box>
     </React.Fragment>
   );
