@@ -50,9 +50,9 @@ export const List = () => {
 
         return (
           <Flex
-            px={3}
-            gap={1}
             py={3}
+            px={4}
+            gap={1}
             key={session.id}
             cursor={'pointer'}
             flexDirection={'column'}
