@@ -1,7 +1,6 @@
 import { env } from '@/configs/env';
 import { type Context } from 'hono';
 import { sign, verify } from 'hono/jwt';
-import { UAParser } from 'ua-parser-js';
 import { sha256 } from 'hono/utils/crypto';
 import { getConnInfo as BunConnInfo } from 'hono/bun';
 import type { JWTPayload } from 'hono/utils/jwt/types';
@@ -96,40 +95,5 @@ export const auth = {
   jwt: {
     sign: signToken,
     verify: verifyToken,
-  },
-  session: async (ctx: Context) => {
-    const headers = ctx.req.raw.headers;
-
-    const fingerprintPayload = [
-      headers.get('user-agent'),
-      headers.get('accept-language'),
-      headers.get('sec-ch-ua-platform'),
-    ].join('|');
-    const fingerprint = await sha256(fingerprintPayload);
-
-    const userAgent = headers.get('user-agent') || '';
-    const parser = new UAParser(userAgent);
-
-    const ua = parser.getResult();
-
-    const appVersion = headers.get('x-app-version');
-    const osVersion = headers.get('x-os-version') || ua.os.version || 'unknown';
-    const deviceType =
-      headers.get('x-device-type') || ua.device.type || 'unknown';
-    const deviceName =
-      headers.get('x-device-name') || ua.device.vendor || 'unknown';
-
-    const ipAddress = getIpAddress(ctx);
-
-    return {
-      userAgent,
-      ipAddress,
-      fingerprint,
-      appVersion,
-      osVersion,
-      deviceType,
-      deviceName,
-      expiresAt: Date.now() + DEFAULT_EXPIRES.refresh * 1000,
-    };
   },
 };
