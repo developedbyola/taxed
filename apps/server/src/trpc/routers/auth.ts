@@ -144,14 +144,11 @@ export const authRouter = router({
 
         const session = await ctx.supabase
           .from('user_sessions')
-          .upsert(
-            {
-              user_id: user.data.id,
-              ip_address: info.remote.address || 'unknown',
-              user_agent: ctx.req.header('user-agent') || 'unknown',
-            },
-            { onConflict: 'user_agent' }
-          )
+          .insert({
+            user_id: user.data.id,
+            ip_address: info.remote.address || 'unknown',
+            user_agent: ctx.req.header('user-agent') || 'unknown',
+          })
           .select('id')
           .single();
 
