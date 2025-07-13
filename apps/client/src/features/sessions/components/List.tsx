@@ -2,7 +2,8 @@ import React from 'react';
 import { trpc } from '@/libs/trpc';
 import type { Session } from '../types';
 import { useDialog } from '@/components';
-import { Box, Flex, Spinner, Text, Heading } from '@chakra-ui/react';
+import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
+import { UAParser } from 'ua-parser-js';
 
 const useListSessions = () => {
   const dialog = useDialog();
@@ -36,12 +37,26 @@ export const List = () => {
   if (status === 'pending') return <Spinner mx='auto' />;
 
   return (
-    <Box>
+    <Box
+      bg='gray.100'
+      divideY='3px'
+      divideColor='white'
+      rounded={12}
+    >
       {data?.sessions.map((session) => {
+        const parser = new UAParser(session.userAgent);
+
         return (
-          <Flex key={session.id}>
-            <Text>{session.userAgent}</Text>
-            <Text>{session.ipAddress}</Text>
+          <Flex
+            p={2}
+            gap={1}
+            key={session.id}
+            flexDirection={'column'}
+          >
+            <Text>
+              {parser.getBrowser().name || 'Unknown'}{' '}
+              {parser.getOS().name || 'Unknown'}
+            </Text>
             <Text>{session.createdAt}</Text>
             <Text>{session.lastActiveAt}</Text>
           </Flex>
