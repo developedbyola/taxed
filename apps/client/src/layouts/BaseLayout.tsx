@@ -45,9 +45,9 @@ const BaseLayout = () => {
       <BrowserRouter>
         <DialogProvider>
           <Auth.Provider>
-            <Auth.RefreshToken>
-              <User.Provider>
-                <TrpcProvider>
+            <User.Provider>
+              <TrpcProvider>
+                <Auth.RefreshToken>
                   <User.Profile>
                     <HelmetProvider>
                       <Routes>
@@ -127,9 +127,9 @@ const BaseLayout = () => {
                       </Routes>
                     </HelmetProvider>
                   </User.Profile>
-                </TrpcProvider>
-              </User.Provider>
-            </Auth.RefreshToken>
+                </Auth.RefreshToken>
+              </TrpcProvider>
+            </User.Provider>
           </Auth.Provider>
           <DialogRenderer />
         </DialogProvider>
