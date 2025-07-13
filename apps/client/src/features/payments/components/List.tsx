@@ -30,7 +30,7 @@ export const List = () => {
         >
           <Heading letterSpacing={'-3%'}>Pay</Heading>
           <Tooltip.Root>
-            <Tooltip.Trigger>
+            <Tooltip.Trigger asChild>
               <IconButton
                 unstyled
                 size={'xs'}

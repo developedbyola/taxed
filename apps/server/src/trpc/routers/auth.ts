@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import argon2 from 'argon2';
 import { auth } from '../../utils/auth';
+import { env } from '@/configs/env';
+import { getConnInfo } from 'hono/bun';
 import { publicProcedure, router } from '../middleware';
 
 // Strong password validation schema
@@ -14,116 +16,6 @@ const passwordSchema = z
   .regex(/^\S+$/, 'Password cannot contain spaces');
 
 export const authRouter = router({
-  login: publicProcedure
-    .input(
-      z.object({
-        password: passwordSchema,
-        email: z.string().email('Please enter a valid email address'),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { email, password } = input;
-
-      try {
-        const user = await ctx.supabase
-          .from('users')
-          .select('id, created_at, first_name, last_name, email, password')
-          .eq('email', email.toLowerCase())
-          .single();
-
-        if (user.error || !user.data) {
-          return ctx.fail({
-            code: 'UNAUTHORIZED',
-            message:
-              'The email you entered is incorrect. Please check your credentials and try again.',
-          });
-        }
-
-        const isPasswordValid = await argon2.verify(
-          user.data.password,
-          password
-        );
-        if (!isPasswordValid) {
-          return ctx.fail({
-            code: 'UNAUTHORIZED',
-            message:
-              "The password you entered is incorrect. Please try again or reset your password if you've forgotten it.",
-          });
-        }
-
-        const {
-          deviceName,
-          deviceType,
-          osVersion,
-          appVersion,
-          ipAddress,
-          fingerprint,
-          expiresAt,
-        } = await auth.session(ctx.honoContext);
-
-        const session = await ctx.supabase
-          .from('user_sessions')
-          .upsert(
-            {
-              fingerprint,
-              is_active: true,
-              os_version: osVersion,
-              user_id: user.data.id,
-              ip_address: ipAddress,
-              expires_at: expiresAt,
-              device_name: deviceName,
-              device_type: deviceType,
-              app_version: appVersion,
-            },
-            { onConflict: 'fingerprint' }
-          )
-          .select('id')
-          .single();
-
-        if (!session.data) {
-          return ctx.fail({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: `We encountered an unexpected error while setting up your session. ${session.error.message}`,
-          });
-        }
-
-        // Get user data
-        const userData = {
-          id: user.data.id,
-          firstName: user.data.first_name,
-          lastName: user.data.last_name,
-          email: user.data.email,
-          createdAt: user.data.created_at,
-        };
-
-        // Sign access token
-        const accessToken = await auth.jwt.sign({
-          type: 'access',
-          payload: {
-            userId: userData.id,
-            sessionId: session.data.id,
-          },
-        });
-
-        // Sign refresh token
-        const refreshToken = await auth.jwt.sign({
-          type: 'refresh',
-          payload: {
-            userId: userData.id,
-            sessionId: session.data.id,
-          },
-        });
-
-        // Return access token and user data
-        return ctx.ok(
-          { accessToken, refreshToken, user: userData },
-          { httpStatus: 200, path: 'auth.login' }
-        );
-      } catch (err) {
-        return ctx.fail(err);
-      }
-    }),
-
   register: publicProcedure
     .input(
       z.object({
@@ -192,6 +84,142 @@ export const authRouter = router({
       }
     }),
 
+  login: publicProcedure
+    .input(
+      z.object({
+        password: passwordSchema,
+        email: z.string().email('Please enter a valid email address'),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { email, password } = input;
+
+      try {
+        const user = await ctx.supabase
+          .from('users')
+          .select('id, created_at, first_name, last_name, email, password')
+          .eq('email', email.trim().toLowerCase())
+          .single();
+
+        if (user.error) {
+          return ctx.fail({
+            code: 'UNAUTHORIZED',
+            message:
+              'The email you entered is incorrect. Please check your credentials and try again.',
+          });
+        }
+
+        const isPasswordValid = await argon2.verify(
+          user.data.password,
+          password
+        );
+        if (!isPasswordValid) {
+          return ctx.fail({
+            code: 'UNAUTHORIZED',
+            message:
+              "The password you entered is incorrect. Please try again or reset your password if you've forgotten it.",
+          });
+        }
+
+        const sessions = await ctx.supabase
+          .from('user_sessions')
+          .select('*')
+          .eq('user_id', user.data.id);
+
+        if (sessions.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `We encountered an unexpected error while setting up your session. ${sessions.error.message}`,
+          });
+        }
+
+        if (sessions.data.length > Number(env.MAX_SESSIONS)) {
+          await ctx.supabase
+            .from('user_sessions')
+            .delete()
+            .eq('id', sessions.data[0].id);
+        }
+
+        const info = getConnInfo(ctx.honoContext);
+
+        const session = await ctx.supabase
+          .from('user_sessions')
+          .upsert(
+            {
+              user_id: user.data.id,
+              ip_address: info.remote.address || 'unknown',
+              user_agent: ctx.req.header('user-agent') || 'unknown',
+            },
+            { onConflict: 'user_agent' }
+          )
+          .select('id')
+          .single();
+
+        if (session.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `We encountered an unexpected error while setting up your session. ${session.error.message}`,
+          });
+        }
+
+        // Sign access token
+        const accessToken = await auth.jwt.sign({
+          type: 'access',
+          payload: {
+            userId: user.data.id,
+            sessionId: session.data.id,
+          },
+        });
+
+        // Sign refresh token
+        const refreshToken = await auth.jwt.sign({
+          type: 'refresh',
+          payload: {
+            userId: user.data.id,
+            sessionId: session.data.id,
+          },
+        });
+
+        // Update the session with the refresh token
+        const updatedSession = await ctx.supabase
+          .from('user_sessions')
+          .update({
+            refresh_token: await argon2.hash(refreshToken),
+          })
+          .eq('id', session.data.id)
+          .select()
+          .single();
+
+        if (updatedSession.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `Failed to store refresh token in session. ${updatedSession.error.message}`,
+          });
+        }
+
+        // Get user data
+        const userData = {
+          id: user.data.id,
+          firstName: user.data.first_name,
+          lastName: user.data.last_name,
+          email: user.data.email,
+          createdAt: user.data.created_at,
+        };
+
+        // Return access token and user data
+        return ctx.ok(
+          {
+            accessToken,
+            refreshToken,
+            user: userData,
+          },
+          { httpStatus: 200, path: 'auth.login' }
+        );
+      } catch (err) {
+        return ctx.fail(err);
+      }
+    }),
+
   refresh: publicProcedure
     .input(
       z.object({
@@ -210,28 +238,28 @@ export const authRouter = router({
 
         const session = await ctx.supabase
           .from('user_sessions')
-          .select('*')
+          .update({ last_active_at: new Date().toISOString() })
           .eq('id', sessionId)
           .eq('user_id', userId)
-          .eq('is_active', true)
+          .select('*')
           .single();
 
         if (session.error) {
           return ctx.fail({
-            code: 'BAD_REQUEST',
-            message:
-              'Failed to reach out to server. Ensure you are connected to the network, then try again later.',
+            code: 'INTERNAL_SERVER_ERROR',
+            message: session.error.message,
           });
         }
 
-        const isSessionNotFound = !session.data;
-        const isSessionInactive = !session.data?.is_active;
-        const isSessionExpired = session.data?.expires_at < Date.now();
+        const isRefreshTokenValid = await argon2.verify(
+          session.data.refresh_token,
+          refreshToken
+        );
 
-        if (isSessionNotFound || isSessionInactive || isSessionExpired) {
+        if (!isRefreshTokenValid) {
           return ctx.fail({
             code: 'UNAUTHORIZED',
-            message: 'Your session has expired. Please log in again.',
+            message: 'Invalid refresh token',
           });
         }
 
@@ -239,17 +267,45 @@ export const authRouter = router({
         const accessToken = await auth.jwt.sign({
           type: 'access',
           payload: {
-            userId,
-            sessionId,
+            sessionId: session.data.id,
+            userId: session.data.user_id,
           },
         });
 
+        const newRefreshToken = await auth.jwt.sign({
+          type: 'refresh',
+          payload: {
+            sessionId: session.data.id,
+            userId: session.data.user_id,
+          },
+        });
+
+        const updatedSession = await ctx.supabase
+          .from('user_sessions')
+          .update({ refresh_token: argon2.hash(newRefreshToken) })
+          .eq('id', sessionId)
+          .eq('user_id', userId)
+          .select('*')
+          .single();
+
+        if (updatedSession.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: updatedSession.error.message,
+          });
+        }
+
         return ctx.ok(
-          { accessToken, refreshToken },
+          { accessToken, refreshToken: newRefreshToken },
           { httpStatus: 200, path: 'auth.refresh' }
         );
       } catch (err) {
-        return ctx.fail(err);
+        return ctx.fail({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Your session has expired. Please log in again. ${
+            (err as any).message
+          }`,
+        });
       }
     }),
 
@@ -262,20 +318,47 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         const refreshToken = input.refreshToken;
-        const actor = await auth.jwt.verify('refresh', refreshToken);
+        const { userId, sessionId } = await auth.jwt.verify(
+          'refresh',
+          refreshToken
+        );
 
         const session = await ctx.supabase
           .from('user_sessions')
-          .update({ is_active: false })
-          .eq('id', actor.sessionId)
-          .eq('user_id', actor.userId)
           .select('*')
+          .eq('id', sessionId)
+          .eq('user_id', userId)
           .single();
 
-        if (!session.data) {
+        if (session.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: session.error.message,
+          });
+        }
+
+        const isRefreshTokenValid = await argon2.verify(
+          session.data.refresh_token,
+          refreshToken
+        );
+
+        if (!isRefreshTokenValid) {
           return ctx.fail({
             code: 'UNAUTHORIZED',
-            message: 'Your session has expired. Please log in again.',
+            message: 'Invalid refresh token',
+          });
+        }
+
+        const deletedSession = await ctx.supabase
+          .from('user_sessions')
+          .delete()
+          .eq('id', sessionId)
+          .eq('user_id', userId);
+
+        if (deletedSession.error) {
+          return ctx.fail({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: deletedSession.error.message,
           });
         }
 
@@ -284,8 +367,12 @@ export const authRouter = router({
           { httpStatus: 200, path: 'auth.logout' }
         );
       } catch (err) {
-        console.log(err);
-        return ctx.fail(err);
+        return ctx.fail({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `We encountered an issue while logging you out. ${
+            (err as any).message
+          }`,
+        });
       }
     }),
 });

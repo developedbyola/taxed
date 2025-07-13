@@ -2,7 +2,7 @@ import React from 'react';
 import Cookies from 'js-cookie';
 
 type Auth = {
-  isPending: boolean;
+  isLoading: boolean;
   isAuthenticated: boolean;
   accessToken: string | undefined;
   refreshToken: string | undefined;
@@ -44,18 +44,17 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         auth: {
-          isPending: false,
+          isLoading: false,
           isAuthenticated: true,
           accessToken: action.payload.auth.accessToken,
           refreshToken: action.payload.auth.refreshToken,
         },
       };
     case 'LOGOUT':
-      Cookies.remove('refresh_token');
       return {
         ...state,
         auth: {
-          isPending: false,
+          isLoading: false,
           accessToken: undefined,
           isAuthenticated: false,
           refreshToken: undefined,
@@ -70,7 +69,7 @@ export const Provider = ({
   children,
   initialState = {
     auth: {
-      isPending: true,
+      isLoading: true,
       accessToken: undefined,
       isAuthenticated: false,
       refreshToken: Cookies.get('refresh_token'),

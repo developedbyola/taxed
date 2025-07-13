@@ -1,5 +1,4 @@
 import React from 'react';
-import Cookies from 'js-cookie';
 import { Auth } from '@/features/auth';
 import { Dashboard } from '@/components';
 import { useDialog } from '@/components';
@@ -12,17 +11,20 @@ export const ProtectedLayout = () => {
   const { auth } = Auth.useAuth();
 
   React.useEffect(() => {
-    if (!auth.isPending && !auth.isAuthenticated) {
+    if (!auth.isLoading && auth.isAuthenticated === false) {
+      const title = auth.refreshToken ? 'Session Expired' : 'Signed out';
+      const message = auth.refreshToken
+        ? 'Your session has expired. Sign in again to continue where you left off.'
+        : 'You are signed out. Please login to continue.';
+
       dialog.open({
-        title: 'Session Expired',
-        message:
-          'Your session has expired. Sign in again to continue where you left off.',
+        title,
+        message,
         actions: [
           {
             label: 'Login',
             variant: 'solid',
             onClick: () => {
-              Cookies.remove('refresh_token');
               navigate('/login', {
                 replace: true,
               });
@@ -31,7 +33,9 @@ export const ProtectedLayout = () => {
         ],
       });
     }
-  }, [auth.isAuthenticated, auth.isPending]);
+  }, [auth.isAuthenticated, auth.isLoading, auth.refreshToken]);
+
+  if (!auth.isAuthenticated) return null;
 
   return (
     <Flex

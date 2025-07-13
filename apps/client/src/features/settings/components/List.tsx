@@ -68,11 +68,12 @@ export const List = () => {
           overflow={'hidden'}
           divideColor={'white'}
         >
-          {items.map((item) => {
+          {items.map((item, index) => {
             return (
               <Flex
                 p={3}
                 gap={4}
+                key={index}
                 cursor={'pointer'}
                 alignItems={'center'}
                 _hover={{ bg: 'gray.200' }}

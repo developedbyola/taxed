@@ -30,6 +30,7 @@
     "cookie": "^1.0.2",
     "dotenv": "^16.5.0",
     "hono": "^4.8.1",
+    "request-ip": "^3.3.0",
     "supabase": "^2.26.9",
     "typescript": "^5.8.3",
     "ua-parser-js": "^2.0.3",

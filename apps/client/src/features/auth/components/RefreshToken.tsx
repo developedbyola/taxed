@@ -8,7 +8,7 @@ const useRefreshToken = () => {
   const { auth, setAuth } = useAuth();
 
   const refresh = trpc.auth.refresh.useMutation({
-    onError: (err, data) => {
+    onError: (err, input) => {
       if (err.message.includes('expired')) {
         setAuth({
           type: 'LOGOUT',
@@ -21,14 +21,14 @@ const useRefreshToken = () => {
         message: err.message,
         actions: [
           {
-            label: 'OK',
+            label: 'Understood',
           },
           {
             label: 'Reload',
             variant: 'solid',
             onClick: async () => {
               await refresh.mutateAsync({
-                refreshToken: data.refreshToken,
+                refreshToken: input.refreshToken,
               });
             },
           },
@@ -53,18 +53,22 @@ const useRefreshToken = () => {
       setAuth({
         type: 'LOGOUT',
       });
+
       return;
     }
 
     await refresh.mutateAsync({
-      refreshToken: auth.refreshToken,
+      refreshToken: auth?.refreshToken || '',
     });
   }, []);
 
   React.useEffect(() => {
     mutate();
 
-    const interval = setInterval(() => mutate(), 30 * 60 * 1000); // 30 minutes;
+    const interval = setInterval(() => {
+      mutate();
+    }, 30 * 60 * 1000);
+
     return () => clearInterval(interval);
   }, [mutate]);
 };
