@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Button, Heading, Text, VStack } from '@chakra-ui/react';
-import { Auth } from '@/features/auth';
+import { Sessions as SessionsFeature } from '@/features/sessions';
+import { Box, Heading, Separator, Text, VStack } from '@chakra-ui/react';
 
 const IsoCon = () => {
   return (
@@ -59,8 +59,6 @@ const IsoCon = () => {
 };
 
 export const Sessions = () => {
-  const { setAuth } = Auth.useAuth();
-
   return (
     <React.Fragment>
       <Box py={4}>
@@ -88,24 +86,10 @@ export const Sessions = () => {
             You’re now signed in, allowing you to manage your account, access
             your dashboard, and continue using all available services.
           </Text>
-
-          <Button
-            mt={6}
-            py={2}
-            px={4}
-            height={'fit'}
-            rounded={12}
-            bg='red.600'
-            _hover={{ backgroundColor: 'red.500' }}
-            onClick={() => {
-              setAuth({
-                type: 'LOGOUT',
-              });
-            }}
-          >
-            Sign out
-          </Button>
         </VStack>
+
+        <Separator my={8} />
+        <SessionsFeature.List />
       </Box>
     </React.Fragment>
   );
