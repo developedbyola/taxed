@@ -282,7 +282,7 @@ export const authRouter = router({
 
         const updatedSession = await ctx.supabase
           .from('user_sessions')
-          .update({ refresh_token: argon2.hash(newRefreshToken) })
+          .update({ refresh_token: await argon2.hash(newRefreshToken) })
           .eq('id', sessionId)
           .eq('user_id', userId)
           .select('*')
