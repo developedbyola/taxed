@@ -75,8 +75,7 @@ export const List = () => {
                 lineHeight={1}
                 color='gray.500'
               >
-                {session.ipAddress}-{' '}
-                {dayjs(session.createdAt).format('DD/MM/YYYY')}
+                {`${dayjs(session.createdAt).format('DD/MM/YYYY')}`}
               </Text>
             </Box>
           </Flex>
