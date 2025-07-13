@@ -2,7 +2,7 @@ import { trpc } from '@/libs/trpc';
 import { useAuth } from './Provider';
 import { loginSchema } from '../schemas';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { Field, useDialog } from '@/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Box, Spinner } from '@chakra-ui/react';
@@ -10,7 +10,7 @@ import { BaseLayout } from '../layouts/BaseLayout';
 
 export const Login = () => {
   const dialog = useDialog();
-  const { setAuth } = useAuth();
+  const { setAuth, auth } = useAuth();
   const navigate = useNavigate();
   const form = useForm({
     mode: 'all',
@@ -54,6 +54,15 @@ export const Login = () => {
       });
     },
   });
+
+  if (auth.isAuthenticated) {
+    return (
+      <Navigate
+        to='/app'
+        replace
+      />
+    );
+  }
 
   return (
     <BaseLayout
