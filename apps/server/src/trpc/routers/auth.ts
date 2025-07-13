@@ -303,6 +303,7 @@ export const authRouter = router({
           { httpStatus: 200, path: 'auth.refresh' }
         );
       } catch (err) {
+        console.log(err);
         return ctx.fail({
           code: 'INTERNAL_SERVER_ERROR',
           message: `Your session has expired. Please log in again. ${
