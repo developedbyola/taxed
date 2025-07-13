@@ -107,7 +107,7 @@ const Item = ({ session }: { session: Session }) => {
           lineHeight={1}
           color='gray.500'
         >
-          {`Last active - ${dayjs(session.createdAt).format(
+          {`Last active - ${dayjs(session.lastActiveAt).format(
             'DD/MM/YYYY hh:mm A'
           )}`}
         </Text>
