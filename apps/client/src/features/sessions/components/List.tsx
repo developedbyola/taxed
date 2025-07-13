@@ -75,7 +75,9 @@ export const List = () => {
                 lineHeight={1}
                 color='gray.500'
               >
-                {`${dayjs(session.createdAt).format('DD/MM/YYYY')}`}
+                {`Last active - ${dayjs(session.createdAt).format(
+                  'DD/MM/YYYY hh:mm A'
+                )}`}
               </Text>
             </Box>
           </Flex>
