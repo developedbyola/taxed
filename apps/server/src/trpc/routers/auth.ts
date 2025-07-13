@@ -235,10 +235,9 @@ export const authRouter = router({
 
         const session = await ctx.supabase
           .from('user_sessions')
-          .update({ last_active_at: new Date().toISOString() })
+          .select('*')
           .eq('id', sessionId)
           .eq('user_id', userId)
-          .select('*')
           .single();
 
         if (session.error) {
