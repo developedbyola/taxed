@@ -4,7 +4,7 @@ import { trpc } from '@/libs/trpc';
 import type { Session } from '../types';
 import { UAParser } from 'ua-parser-js';
 import { useDialog } from '@/components';
-import { Box, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react';
 
 const useListSessions = () => {
   const dialog = useDialog();
@@ -121,12 +121,9 @@ export const List = () => {
 
   if (status === 'pending')
     return (
-      <Box
-        maxW='12rem'
-        mx='auto'
-      >
-        <Spinner mx='auto' />
-      </Box>
+      <VStack>
+        <Spinner />
+      </VStack>
     );
 
   return (
