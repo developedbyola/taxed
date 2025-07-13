@@ -284,9 +284,7 @@ export const authRouter = router({
             last_active_at: new Date().toISOString(),
           })
           .eq('id', sessionId)
-          .eq('user_id', userId)
-          .select('*')
-          .single();
+          .eq('user_id', userId);
 
         if (updatedSession.error) {
           return ctx.fail({
