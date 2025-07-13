@@ -119,7 +119,15 @@ const Item = ({ session }: { session: Session }) => {
 export const List = () => {
   const { status, data } = useListSessions();
 
-  if (status === 'pending') return <Spinner mx='auto' />;
+  if (status === 'pending')
+    return (
+      <Box
+        maxW='12rem'
+        mx='auto'
+      >
+        <Spinner mx='auto' />
+      </Box>
+    );
 
   return (
     <Box
