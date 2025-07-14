@@ -35,27 +35,27 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
         accessToken
       );
     }
+    if (!actor) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'You must be logged in to access this feature.',
+      });
+    }
+  
+    return next({
+      ctx: {
+        ...ctx,
+        actor,
+      },
+    });
   } catch (error) {
     // Token verification failed
     throw new TRPCError({
       code: 'UNAUTHORIZED',
-      message: 'Invalid or expired token.',
+      message: (error as any).message ,
     });
   }
 
-  if (!actor) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'You must be logged in to access this feature.',
-    });
-  }
-
-  return next({
-    ctx: {
-      ...ctx,
-      actor,
-    },
-  });
 });
 
 export const router = t.router;
