@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import argon2 from 'argon2';
 import jwt from '@/utils/jwt';
-import { env } from '@/configs/env';
-import { getConnInfo } from 'hono/bun';
-import { publicProcedure, router } from '../middleware';
 import time from '@/utils/time';
+import { env } from '@/configs/env';
+import { getClientIp } from 'request-ip';
+import { publicProcedure, router } from '../middleware';
 
 // Strong password validation schema
 const passwordSchema = z
@@ -147,13 +147,13 @@ export const authRouter = router({
             .eq('id', sessions.data[0].id);
         }
 
-        const info = getConnInfo(ctx.honoContext);
+        const ip_address = getClientIp(ctx.req as any);
 
         const session = await ctx.supabase
           .from('user_sessions')
           .insert({
             user_id: user.data.id,
-            ip_address: info.remote.address || 'unknown',
+            ip_address: ip_address || 'unknown',
             user_agent: ctx.req.header('user-agent') || 'unknown',
           })
           .select('id')
