@@ -27,35 +27,35 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
   const authorization = ctx.req.header('Authorization');
   const accessToken = authorization?.split('Bearer ')[1];
 
-  let actor = null;
   try {
+    let actor = null;
     if (accessToken) {
       actor = await jwt.verify<{ userId: string; sessionId: string }>(
         env.ACCESS_TOKEN_SECRET,
         accessToken
       );
     }
+
     if (!actor) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
         message: 'You must be logged in to access this feature.',
       });
     }
-  
+
     return next({
       ctx: {
         ...ctx,
         actor,
       },
     });
-  } catch (error) {
-    // Token verification failed
+  } catch (err) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: (error as any).message ,
+      code: 'INTERNAL_SERVER_ERROR',
+      message:
+        'We are unable to complete this request at the moment. Please try again later.',
     });
   }
-
 });
 
 export const router = t.router;
