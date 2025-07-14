@@ -4,8 +4,8 @@ import Cookies from 'js-cookie';
 type Auth = {
   isLoading: boolean;
   isAuthenticated: boolean;
-  accessToken: string | undefined;
-  refreshToken: string | undefined;
+  refreshToken: string | null;
+  accessToken: string | null;
 };
 
 type State = {
@@ -17,7 +17,12 @@ type Action =
       type: 'LOGIN';
       payload: { auth: Pick<Auth, 'accessToken' | 'refreshToken'> };
     }
-  | { type: 'LOGOUT' };
+  | { type: 'LOGOUT' }
+  | {
+      type: 'SET_TOKENS';
+      payload: { auth: Pick<Auth, 'accessToken' | 'refreshToken'> };
+    };
+
 type Context = State & {
   setAuth: React.Dispatch<Action>;
 };
@@ -46,18 +51,34 @@ const reducer = (state: State, action: Action): State => {
         auth: {
           isLoading: false,
           isAuthenticated: true,
-          accessToken: action.payload.auth.accessToken,
           refreshToken: action.payload.auth.refreshToken,
+          accessToken: action.payload.auth.accessToken,
+        },
+      };
+    case 'SET_TOKENS':
+      Cookies.set('refresh_token', action.payload.auth.refreshToken!, {
+        expires: 30,
+        secure: false,
+        httpOnly: false,
+        sameSite: 'Lax',
+      });
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          refreshToken: action.payload.auth.refreshToken,
+          accessToken: action.payload.auth.accessToken,
         },
       };
     case 'LOGOUT':
+      Cookies.remove('refresh_token');
       return {
         ...state,
         auth: {
           isLoading: false,
-          accessToken: undefined,
+          refreshToken: null,
+          accessToken: null,
           isAuthenticated: false,
-          refreshToken: undefined,
         },
       };
     default:
@@ -70,9 +91,9 @@ export const Provider = ({
   initialState = {
     auth: {
       isLoading: true,
-      accessToken: undefined,
+      accessToken: null,
       isAuthenticated: false,
-      refreshToken: Cookies.get('refresh_token'),
+      refreshToken: Cookies.get('refresh_token') || null,
     },
   },
 }: {

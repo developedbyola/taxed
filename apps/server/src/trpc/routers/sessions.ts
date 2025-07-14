@@ -23,6 +23,7 @@ export const sessionsRouter = router({
             sessions.data?.map((session) => ({
               id: session.id,
               userId: session.user_id,
+              revoked: session.revoked,
               userAgent: session.user_agent,
               ipAddress: session.ip_address,
               createdAt: session.created_at,
@@ -58,6 +59,7 @@ export const sessionsRouter = router({
           session: {
             isCurrent: true,
             id: session.data.id,
+            revoked: session.data.revoked,
             userId: session.data.user_id,
             userAgent: session.data.user_agent,
             ipAddress: session.data.ip_address,
@@ -78,7 +80,7 @@ export const sessionsRouter = router({
       try {
         const session = await ctx.supabase
           .from('user_sessions')
-          .delete()
+          .update({ revoked: true })
           .eq('id', input.sessionId)
           .eq('user_id', ctx.actor.userId);
 

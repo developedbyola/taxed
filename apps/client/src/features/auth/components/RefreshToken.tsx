@@ -2,29 +2,45 @@ import React from 'react';
 import { trpc } from '@/libs/trpc';
 import { useAuth } from './Provider';
 import { useDialog } from '@/components';
+import { useNavigate } from 'react-router';
 
 const useRefreshToken = () => {
   const dialog = useDialog();
+  const navigate = useNavigate();
   const { auth, setAuth } = useAuth();
 
   const refresh = trpc.auth.refresh.useMutation({
     onError: (err, input) => {
-      if (err.message.includes('expired')) {
-        setAuth({
-          type: 'LOGOUT',
+      if (err.message.toLowerCase().includes('sign in')) {
+        dialog.open({
+          title: 'Session ended',
+          message: err.message,
+          actions: [
+            {
+              label: 'Sign in',
+              variant: 'solid',
+              onClick: async () => {
+                setAuth({ type: 'LOGOUT' });
+                navigate('/login', {
+                  replace: true,
+                });
+              },
+            },
+          ],
         });
+
         return;
       }
 
       dialog.open({
-        title: 'Authentication error',
+        title: 'Authentication failed',
         message: err.message,
         actions: [
           {
             label: 'Understood',
           },
           {
-            label: 'Reload',
+            label: 'Retry',
             variant: 'solid',
             onClick: async () => {
               await refresh.mutateAsync({
@@ -37,7 +53,7 @@ const useRefreshToken = () => {
     },
     onSuccess: (data: any) => {
       setAuth({
-        type: 'LOGIN',
+        type: 'SET_TOKENS',
         payload: {
           auth: {
             accessToken: data?.accessToken,
@@ -48,26 +64,23 @@ const useRefreshToken = () => {
     },
   });
 
-  const mutate = React.useCallback(async () => {
-    if (!auth?.refreshToken) {
-      setAuth({
-        type: 'LOGOUT',
-      });
-
+  const mutate = React.useCallback(() => {
+    if (!auth.refreshToken) {
+      setAuth({ type: 'LOGOUT' });
       return;
     }
 
-    await refresh.mutateAsync({
-      refreshToken: auth?.refreshToken || '',
+    refresh.mutate({
+      refreshToken: auth.refreshToken || '',
     });
-  }, []);
+  }, [auth.refreshToken]);
 
   React.useEffect(() => {
     mutate();
 
     const interval = setInterval(() => {
       mutate();
-    }, 30 * 60 * 1000);
+    }, 25 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [mutate]);

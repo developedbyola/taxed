@@ -6,4 +6,5 @@ export type Session = {
   createdAt: string;
   lastActiveAt: string;
   isCurrent: boolean;
+  revoked: boolean;
 };

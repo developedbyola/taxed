@@ -1,5 +1,6 @@
+import jwt from '@/utils/jwt';
 import { ZodError } from 'zod';
-import { auth } from '@/utils/auth';
+import { env } from '@/configs/env';
 import type { Context } from '@/trpc/context';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { getFirstValidationMessage } from '@/utils/validationMessage';
@@ -29,7 +30,10 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
   let actor = null;
   try {
     if (accessToken) {
-      actor = await auth.jwt.verify('access', accessToken);
+      actor = await jwt.verify<{ userId: string; sessionId: string }>(
+        env.ACCESS_TOKEN_SECRET,
+        accessToken
+      );
     }
   } catch (error) {
     // Token verification failed

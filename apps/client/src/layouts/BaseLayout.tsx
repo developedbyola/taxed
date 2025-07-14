@@ -47,87 +47,87 @@ const BaseLayout = () => {
           <Auth.Provider>
             <User.Provider>
               <TrpcProvider>
-                <Auth.RefreshToken>
-                  <User.Profile>
-                    <HelmetProvider>
-                      <Routes>
-                        <Route
-                          path='/'
-                          element={<Home />}
-                        />
-                        <Route
-                          path='/login'
-                          element={<LoginRoute />}
-                        />
-                        <Route
-                          path='/register'
-                          element={<RegisterRoute />}
-                        />
-                        <Route
-                          path='/app'
-                          element={
+                <User.Profile>
+                  <HelmetProvider>
+                    <Routes>
+                      <Route
+                        path='/'
+                        element={<Home />}
+                      />
+                      <Route
+                        path='/login'
+                        element={<LoginRoute />}
+                      />
+                      <Route
+                        path='/register'
+                        element={<RegisterRoute />}
+                      />
+                      <Route
+                        path='/app'
+                        element={
+                          <Auth.RefreshToken>
                             <Transactions.Provider>
                               <ProtectedLayout />
                             </Transactions.Provider>
-                          }
-                        >
-                          <Route
-                            index
-                            element={<AppHomeRoute />}
-                          />
-                          <Route
-                            path='pay'
-                            element={<AppPayListRoute />}
-                          />
-                          <Route
-                            path='pay/:taxGroup'
-                            element={<AppPayItemRoute />}
-                          />
-                          <Route
-                            path='transactions'
-                            element={<TransactionsRoute />}
-                          />
-                          <Route
-                            path='transactions/:id'
-                            element={<TransactionRoute />}
-                          />
-                          <Route
-                            path='settings'
-                            element={<SettingsRoute />}
-                          />
-                          <Route
-                            path='settings/profile'
-                            element={<SettingsProfile />}
-                          />
-                          <Route
-                            path='settings/account'
-                            element={<SettingsAccount />}
-                          />
-                          <Route
-                            path='settings/password'
-                            element={<SettingsPassword />}
-                          />
-                          <Route
-                            path='settings/source-code'
-                            element={<SettingsSourceCode />}
-                          />
-                          <Route
-                            path='settings/sessions'
-                            element={<SettingsSessions />}
-                          />
-                          <Route
-                            path='settings/terms'
-                            element={<SettingsTerms />}
-                          />
-                          <Route
-                            path='settings/about'
-                            element={<SettingsAbout />}
-                          />
-                        </Route>
-                      </Routes>
-                    </HelmetProvider>
-                  </User.Profile>
-                </Auth.RefreshToken>
+                          </Auth.RefreshToken>
+                        }
+                      >
+                        <Route
+                          index
+                          element={<AppHomeRoute />}
+                        />
+                        <Route
+                          path='pay'
+                          element={<AppPayListRoute />}
+                        />
+                        <Route
+                          path='pay/:taxGroup'
+                          element={<AppPayItemRoute />}
+                        />
+                        <Route
+                          path='transactions'
+                          element={<TransactionsRoute />}
+                        />
+                        <Route
+                          path='transactions/:id'
+                          element={<TransactionRoute />}
+                        />
+                        <Route
+                          path='settings'
+                          element={<SettingsRoute />}
+                        />
+                        <Route
+                          path='settings/profile'
+                          element={<SettingsProfile />}
+                        />
+                        <Route
+                          path='settings/account'
+                          element={<SettingsAccount />}
+                        />
+                        <Route
+                          path='settings/password'
+                          element={<SettingsPassword />}
+                        />
+                        <Route
+                          path='settings/source-code'
+                          element={<SettingsSourceCode />}
+                        />
+                        <Route
+                          path='settings/sessions'
+                          element={<SettingsSessions />}
+                        />
+                        <Route
+                          path='settings/terms'
+                          element={<SettingsTerms />}
+                        />
+                        <Route
+                          path='settings/about'
+                          element={<SettingsAbout />}
+                        />
+                      </Route>
+                    </Routes>
+                  </HelmetProvider>
+                </User.Profile>
               </TrpcProvider>
             </User.Provider>
           </Auth.Provider>

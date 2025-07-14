@@ -1,41 +1,19 @@
-import React from 'react';
 import { Auth } from '@/features/auth';
+import { Navigate } from 'react-router';
 import { Dashboard } from '@/components';
-import { useDialog } from '@/components';
-import { useNavigate } from 'react-router';
 import { Container, Flex } from '@chakra-ui/react';
 
 export const ProtectedLayout = () => {
-  const dialog = useDialog();
-  const navigate = useNavigate();
   const { auth } = Auth.useAuth();
 
-  React.useEffect(() => {
-    if (!auth.isLoading && auth.isAuthenticated === false) {
-      const title = auth.refreshToken ? 'Session Expired' : 'Signed out';
-      const message = auth.refreshToken
-        ? 'Your session has expired. Sign in again to continue where you left off.'
-        : 'You are signed out. Please login to continue.';
-
-      dialog.open({
-        title,
-        message,
-        actions: [
-          {
-            label: 'Login',
-            variant: 'solid',
-            onClick: () => {
-              navigate('/login', {
-                replace: true,
-              });
-            },
-          },
-        ],
-      });
-    }
-  }, [auth.isAuthenticated, auth.isLoading, auth.refreshToken]);
-
-  if (!auth.isAuthenticated) return null;
+  if (!auth.isLoading && !auth.isAuthenticated) {
+    return (
+      <Navigate
+        to='/login'
+        replace
+      />
+    );
+  }
 
   return (
     <Flex

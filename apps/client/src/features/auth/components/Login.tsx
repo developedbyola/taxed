@@ -55,7 +55,7 @@ export const Login = () => {
     },
   });
 
-  if (auth.isAuthenticated) {
+  if (!auth.isLoading && auth.refreshToken) {
     return (
       <Navigate
         to='/app'

@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import argon2 from 'argon2';
-import { auth } from '../../utils/auth';
+import jwt from '@/utils/jwt';
 import { env } from '@/configs/env';
 import { getConnInfo } from 'hono/bun';
 import { publicProcedure, router } from '../middleware';
+import time from '@/utils/time';
 
 // Strong password validation schema
 const passwordSchema = z
@@ -102,10 +103,16 @@ export const authRouter = router({
           .single();
 
         if (user.error) {
+          if (user.error.code === 'PGRST116') {
+            return ctx.fail({
+              code: 'UNAUTHORIZED',
+              message:
+                'The email you entered is incorrect. Please check your credentials and try again.',
+            });
+          }
           return ctx.fail({
-            code: 'UNAUTHORIZED',
-            message:
-              'The email you entered is incorrect. Please check your credentials and try again.',
+            code: 'INTERNAL_SERVER_ERROR',
+            message: user.error.message,
           });
         }
 
@@ -133,7 +140,7 @@ export const authRouter = router({
           });
         }
 
-        if (sessions.data.length > Number(env.MAX_SESSIONS)) {
+        if (sessions.data.length > env.MAX_SESSIONS) {
           await ctx.supabase
             .from('user_sessions')
             .delete()
@@ -160,22 +167,24 @@ export const authRouter = router({
         }
 
         // Sign access token
-        const accessToken = await auth.jwt.sign({
-          type: 'access',
-          payload: {
+        const accessToken = await jwt.sign(
+          env.ACCESS_TOKEN_SECRET,
+          time.unix(env.ACCESS_TOKEN_EXPIRY),
+          {
             userId: user.data.id,
             sessionId: session.data.id,
-          },
-        });
+          }
+        );
 
         // Sign refresh token
-        const refreshToken = await auth.jwt.sign({
-          type: 'refresh',
-          payload: {
+        const refreshToken = await jwt.sign(
+          env.REFRESH_TOKEN_SECRET,
+          time.unix(env.REFRESH_TOKEN_EXPIRY),
+          {
             userId: user.data.id,
             sessionId: session.data.id,
-          },
-        });
+          }
+        );
 
         // Update the session with the refresh token
         const updatedSession = await ctx.supabase
@@ -228,10 +237,18 @@ export const authRouter = router({
         const refreshToken = input.refreshToken;
 
         // Verify the refresh token
-        const { userId, sessionId } = (await auth.jwt.verify(
-          'refresh',
-          refreshToken
-        )) as any;
+        const { userId, sessionId } = await jwt.verify<{
+          userId: string;
+          sessionId: string;
+        }>(env.REFRESH_TOKEN_SECRET, refreshToken);
+
+        if (!userId || !sessionId) {
+          return ctx.fail({
+            code: 'UNAUTHORIZED',
+            message:
+              'Your session has expired. Sign in again to regain access.',
+          });
+        }
 
         const session = await ctx.supabase
           .from('user_sessions')
@@ -241,9 +258,23 @@ export const authRouter = router({
           .single();
 
         if (session.error) {
+          if (session.error.code === 'PGRST116') {
+            return ctx.fail({
+              code: 'UNAUTHORIZED',
+              message: 'Session not found. Sign in again to regain access.',
+            });
+          }
           return ctx.fail({
             code: 'INTERNAL_SERVER_ERROR',
-            message: session.error.message,
+            message: `We could not complete the request, ensure you are connected to an active internet network. ${session.error.message}`,
+          });
+        }
+
+        if (session.data.revoked) {
+          return ctx.fail({
+            code: 'UNAUTHORIZED',
+            message:
+              'Your session was revoked. Sign in again to regain access.',
           });
         }
 
@@ -255,26 +286,28 @@ export const authRouter = router({
         if (!isRefreshTokenValid) {
           return ctx.fail({
             code: 'UNAUTHORIZED',
-            message: 'Invalid refresh token',
+            message: 'Invalid refresh token. Sign in again to regain access.',
           });
         }
 
         // Create a new access token
-        const accessToken = await auth.jwt.sign({
-          type: 'access',
-          payload: {
+        const accessToken = await jwt.sign(
+          env.ACCESS_TOKEN_SECRET,
+          time.unix(env.ACCESS_TOKEN_EXPIRY),
+          {
             sessionId: session.data.id,
             userId: session.data.user_id,
-          },
-        });
+          }
+        );
 
-        const newRefreshToken = await auth.jwt.sign({
-          type: 'refresh',
-          payload: {
+        const newRefreshToken = await jwt.sign(
+          env.REFRESH_TOKEN_SECRET,
+          time.unix(env.REFRESH_TOKEN_EXPIRY),
+          {
             sessionId: session.data.id,
             userId: session.data.user_id,
-          },
-        });
+          }
+        );
 
         const updatedSession = await ctx.supabase
           .from('user_sessions')
@@ -297,12 +330,9 @@ export const authRouter = router({
           { httpStatus: 200, path: 'auth.refresh' }
         );
       } catch (err) {
-        console.error(err);
         return ctx.fail({
           code: 'INTERNAL_SERVER_ERROR',
-          message: `Your session has expired. Please log in again. ${
-            (err as any).message
-          }`,
+          message: (err as any)?.message,
         });
       }
     }),
@@ -316,10 +346,10 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         const refreshToken = input.refreshToken;
-        const { userId, sessionId } = await auth.jwt.verify(
-          'refresh',
-          refreshToken
-        );
+        const { userId, sessionId } = await jwt.verify<{
+          userId: string;
+          sessionId: string;
+        }>(env.REFRESH_TOKEN_SECRET, refreshToken);
 
         const session = await ctx.supabase
           .from('user_sessions')

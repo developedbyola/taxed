@@ -6,9 +6,9 @@ import {
   Container,
   Flex,
   Heading,
-  HStack,
   Icon,
   Text,
+  VStack,
 } from '@chakra-ui/react';
 import { createPortal } from 'react-dom';
 import { useGSAP } from '@gsap/react';
@@ -186,11 +186,11 @@ const DialogComponent = ({
         >
           <Flex flexDirection={'row'}>
             <Icon
-              p={1.5}
+              p={2}
               width={12}
               height={12}
               mx={'auto'}
-              rounded={16}
+              rounded={'full'}
               color={Symbol.color}
               bg={Symbol.backgroundColor}
             >
@@ -220,17 +220,20 @@ const DialogComponent = ({
           >
             {message}
           </Text>
-          <HStack
-            mt={6}
-            justifyContent={'center'}
+          <VStack
+            mt={5}
+            gap={1}
           >
             {actions.map((action) => (
               <Button
-                flex={1}
+                px={4}
+                py={2.5}
+                width='full'
                 rounded={12}
+                height={'fit'}
                 key={action.label}
                 fontWeight={'semibold'}
-                variant={action.variant || 'ghost'}
+                variant={action.variant || 'outline'}
                 onClick={() => {
                   action?.onClick?.();
                   onClose();
@@ -239,7 +242,7 @@ const DialogComponent = ({
                 {action.label}
               </Button>
             ))}
-          </HStack>
+          </VStack>
         </Container>
       </Flex>
     </React.Fragment>,
