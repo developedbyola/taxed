@@ -37,6 +37,8 @@ const useProfile = () => {
       });
     }
   }, [profile.status]);
+
+  console.log({ user, data: profile.status });
 };
 
 export const Profile = ({ children }: { children: React.ReactNode }) => {

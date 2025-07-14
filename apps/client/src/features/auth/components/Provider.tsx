@@ -65,7 +65,8 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         auth: {
-          ...state.auth,
+          isLoading: false,
+          isAuthenticated: true,
           refreshToken: action.payload.auth.refreshToken,
           accessToken: action.payload.auth.accessToken,
         },
