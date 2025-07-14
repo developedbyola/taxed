@@ -11,7 +11,7 @@ export const TrpcProvider = ({ children }: { children: React.ReactNode }) => {
   const trpcClient = trpc.createClient({
     links: [
       httpBatchLink({
-        url: 'http://localhost:4600/api/trpc',
+        url: import.meta.env.VITE_TRPC_API_URL,
         fetch: async (url, options) => {
           return await fetch(url, {
             ...options,
