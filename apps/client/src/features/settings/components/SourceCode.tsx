@@ -129,7 +129,7 @@ export const SourceCode = () => {
 
           <Link
             target='_blank'
-            to={'https://github.com/developedbyola/taxed'}
+            to={`${import.meta.env.VITE_GITHUB_REPO_URL}`}
           >
             <Button
               mt={6}
