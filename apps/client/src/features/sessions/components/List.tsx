@@ -5,8 +5,11 @@ import { Auth } from '@/features/auth';
 import type { Session } from '../types';
 import { UAParser } from 'ua-parser-js';
 import { useDialog } from '@/components';
-import { Box, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { Box, Flex, Heading, Spinner, Text, VStack } from '@chakra-ui/react';
+
+dayjs.extend(relativeTime);
 
 const useListSessions = () => {
   const dialog = useDialog();
@@ -113,40 +116,63 @@ const Item = ({ session }: { session: Session }) => {
       cursor={'pointer'}
       flexDirection={'column'}
       _hover={{ bg: 'gray.200' }}
-      onClick={() =>
-        dialog.open({
-          title: session.isCurrent ? 'Sign out' : 'End session',
-          message: `Are you sure you want to ${
-            session.isCurrent ? 'sign out of this device' : 'end this session'
-          }?`,
-          actions: [
-            {
-              label: 'Cancel',
-            },
-            {
-              variant: 'solid',
-              label: session.isCurrent ? "Yes, I'm sure" : 'Revoke session',
-              onClick: () => {
-                if (session.isCurrent) {
+      onClick={() => {
+        if (session.isCurrent) {
+          dialog.open({
+            title: 'Sign out',
+            message: 'Are you sure you want to sign out of this device?',
+            actions: [
+              {
+                label: 'Cancel',
+              },
+              {
+                variant: 'solid',
+                label: "Yes, I'm sure",
+                onClick: () => {
                   logout.mutate({
                     refreshToken: auth?.refreshToken!,
                   });
-                } else {
+                },
+              },
+            ],
+          });
+        } else if (session.revoked) {
+          dialog.open({
+            title: 'Session revoked',
+            message: 'Session revoked successfully',
+            actions: [
+              {
+                label: 'Understood',
+              },
+            ],
+          });
+        } else {
+          dialog.open({
+            title: 'End session',
+            message: 'Are you sure you want to end this session?',
+            actions: [
+              {
+                label: 'Cancel',
+              },
+              {
+                variant: 'solid',
+                label: "Yes, I'm sure",
+                onClick: () => {
                   revoke.mutate({
                     sessionId: session.id,
                   });
-                }
+                },
               },
-            },
-          ],
-        })
-      }
+            ],
+          });
+        }
+      }}
       transition={'all 300ms ease-in-out'}
     >
       <Box flex={1}>
         <Heading
           fontSize={13}
-          lineHeight={1}
+          lineHeight={1.2}
           fontWeight={'medium'}
         >
           <Text
@@ -158,14 +184,14 @@ const Item = ({ session }: { session: Session }) => {
           {` - ${parser.getOS().name} (${parser.getBrowser().name})`}
         </Heading>
         <Text
-          mt={2}
+          mt={1}
           fontSize={12}
-          lineHeight={1}
+          lineHeight={1.4}
           color='gray.500'
         >
-          {`${session.isCurrent ? '(Current)' : ''} Last active - ${dayjs(
+          {`${session.isCurrent ? '(Current)' : ''} ${dayjs(
             session.lastActiveAt
-          ).format('DD/MM/YYYY hh:mm A')}`}
+          ).fromNow()}`}
         </Text>
       </Box>
     </Flex>

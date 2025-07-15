@@ -76,14 +76,16 @@ const useRefreshToken = () => {
   }, [auth.refreshToken]);
 
   React.useEffect(() => {
-    mutate();
+    if (auth.isLoading) {
+      mutate();
+    }
 
     const interval = setInterval(() => {
       mutate();
     }, 25 * 60 * 1000);
 
     return () => clearInterval(interval);
-  }, [mutate]);
+  }, [mutate, auth.isLoading]);
 };
 
 export const RefreshToken = ({ children }: { children: React.ReactNode }) => {
